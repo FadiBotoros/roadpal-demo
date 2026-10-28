@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Roadpal</title>
+    <link rel="stylesheet" href="maplibre-gl.css">
+    <style>
+        body { margin: 0; font: 16px/1.4 system-ui, sans-serif; }
+        header { padding: 12px 16px; }
+        header h1 { margin: 0 0 4px; font-size: 1.3rem; }
+        header p { margin: 0 0 4px; }
+        #map { width: 100%; height: 70vh; }
+        section { padding: 0 16px; }
+        section h2 { font-size: 1.1rem; margin: 12px 0 4px; }
+        section form, section label, section div { margin-bottom: 4px; }
+        section label > span, section fieldset > span { margin-right: 0.4em; }
+        section label { margin-right: 0.8em; }
+        section fieldset > span { display: block; font-weight: bold; margin-top: 4px; }
+        section fieldset label { display: inline-block; }
+        section fieldset button { display: block; margin-top: 4px; }
+        section input[type="number"] { width: 5em; }
+        section div > strong { display: block; margin-top: 4px; }
+        #notice { font-size: 0.85rem; }
+        button[aria-pressed="true"] { font-weight: bold; }
+        .error { color: #b00020; margin: 4px 0; }
+        .stop-marker { width: 28px; height: 28px; padding: 0; border-radius: 50%; border: 2px solid #fff; background: #1d4ed8; color: #fff; font: bold 14px system-ui, sans-serif; cursor: pointer; }
+        .pause-marker { background: #c2410c; }
+        .stop-marker[aria-current="true"] { outline: 3px solid #facc15; outline-offset: 1px; }
+        .busy::after { content: ""; display: inline-block; width: 0.8em; height: 0.8em; margin-left: 0.5em; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; vertical-align: -0.1em; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @media (prefers-reduced-motion: reduce) { .busy::after { display: none; } }
+        @media (min-width: 900px) {
+            body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+            body > script { display: none; }
+            body > header, body > section { grid-column: 1; }
+            #map { grid-column: 2; grid-row: 1 / span 3; position: sticky; top: 0; height: 100vh; }
+        }
+    </style>
+</head>
+<body>
+<script type="module" src="webApp.js"></script>
+</body>
+</html>
