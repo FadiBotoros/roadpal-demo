@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Roadpal prototype: Day timeline / Roadpal-prototyp: Dagens tidslinje</title>
+<style>
+:root {
+  --background: #FFF9F0; --surface: #FFFFFF; --text: #1F2933; --text-muted: #52606D;
+  --primary: #1E6F5C; --on-primary: #FFFFFF; --accent: #F4A340; --border: #D9D2C5; --on-accent: #1F2933;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #14181B; --surface: #1E2429; --text: #F2F4F5; --text-muted: #B4BDC4;
+    --primary: #5CC8A8; --on-primary: #0B1F19; --accent: #F4B860; --border: #3A444B; --on-accent: #14181B;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--background); color: var(--text); font: 400 16px/24px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main.prototype { max-width: 1200px; margin: 0 auto; padding: 16px; }
+button:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
+
+.prototype-head { padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+.prototype-head h1 { margin: 0 0 8px; font-size: 24px; line-height: 32px; font-weight: 700; }
+.prototype-head h1 span { display: block; }
+.prototype-head p { margin: 0; font-size: 14px; line-height: 20px; color: var(--text-muted); }
+
+section { padding: 24px 0; border-top: 1px solid var(--border); }
+h2 { margin: 0 0 12px; font-size: 20px; line-height: 28px; font-weight: 700; }
+.sub { margin: 24px 0 8px; font-size: 20px; line-height: 28px; font-weight: 700; }
+.tag { display: inline-block; margin: 0 0 8px; padding: 4px 8px; border: 1px solid var(--border); border-radius: 12px; font-size: 12px; line-height: 16px; color: var(--text-muted); }
+.marker { margin: 8px 0 0; font-size: 14px; line-height: 20px; color: var(--text-muted); }
+.caption { margin: 8px 0 0; font-size: 12px; line-height: 16px; color: var(--text-muted); }
+.summary { margin: 0 0 8px; }
+.notice { margin: 0; padding: 8px 12px; border: 1px solid var(--border); border-radius: 12px; font-size: 14px; line-height: 20px; }
+.progress { margin: 0 0 12px; font-weight: 700; }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 12px 16px; border: 1px solid transparent; border-radius: 12px; font: inherit; font-weight: 700; line-height: 24px; text-align: center; cursor: pointer; }
+.btn-primary { width: 100%; margin-top: 16px; background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+.btn-secondary { background: transparent; color: var(--primary); border-color: var(--primary); }
+.btn-link { background: transparent; color: var(--primary); padding: 12px 8px; text-decoration: underline; }
+.pause { margin-top: 24px; }
+
+.first-body { display: block; }
+.map-box { margin-bottom: 16px; }
+.map-head { display: flex; justify-content: flex-end; }
+.route-map { display: block; width: 100%; height: 45vh; }
+.route-map .route { fill: none; stroke: var(--primary); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+.route-map .city { fill: var(--text); }
+.route-map .city-name { fill: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: 14px; font-weight: 700; }
+.route-map .pin circle { fill: var(--primary); }
+.route-map .pin text { fill: var(--on-primary); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: 14px; font-weight: 700; text-anchor: middle; dominant-baseline: central; }
+
+.timeline { list-style: none; margin: 0; padding: 0; max-width: 720px; }
+.timeline li { display: flex; position: relative; }
+.clock { flex: 0 0 120px; margin: 0; padding: 12px 12px 12px 0; font-size: 20px; line-height: 28px; font-weight: 700; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.spine { position: relative; flex: 0 0 40px; }
+.spine::before { content: ""; position: absolute; left: 18px; top: 0; bottom: 0; width: 4px; background: var(--primary); }
+.first .spine::before { top: 26px; }
+.last .spine::before { bottom: auto; height: 26px; }
+.solo .spine::before { display: none; }
+.spine.dashed::before { width: 0; background: none; border-left: 4px dashed var(--text-muted); }
+.dot { position: absolute; left: 14px; top: 20px; width: 12px; height: 12px; border-radius: 50%; background: var(--primary); }
+.node { position: absolute; left: 6px; top: 12px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--primary); border-radius: 50%; background: var(--background); color: var(--primary); font-size: 14px; line-height: 24px; font-weight: 700; }
+.node.added { background: var(--primary); color: var(--on-primary); }
+.stop > .clock, .stop > .body, .end > .clock, .end > .body { border-top: 1px solid var(--border); }
+.body { flex: 1 1 auto; min-width: 0; padding: 12px 0 16px; }
+.drive .drive-label { flex: 1 1 auto; min-width: 0; margin: 0; padding: 12px 0; font-size: 14px; line-height: 24px; color: var(--text-muted); }
+.head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.name { margin: 0; font-size: 20px; line-height: 28px; font-weight: 700; overflow-wrap: anywhere; }
+.pill { flex: 0 0 auto; display: inline-block; padding: 4px 8px; border-radius: 12px; background: var(--accent); color: var(--on-accent); font-size: 14px; line-height: 20px; font-weight: 700; }
+.derived { margin: 4px 0 0; font-size: 12px; line-height: 16px; color: var(--text-muted); }
+.meta { display: flex; flex-wrap: wrap; column-gap: 16px; row-gap: 4px; margin: 8px 0 0; font-size: 14px; line-height: 20px; }
+.added-line { margin: 8px 0 0; font-size: 14px; line-height: 20px; font-weight: 700; color: var(--primary); }
+.stretch-text { margin: 0 0 8px; }
+.gap .body { padding-bottom: 16px; }
+
+.card { margin: 12px 0 0; padding: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
+.label { margin: 0; font-size: 14px; line-height: 20px; font-weight: 700; }
+.reason { margin: 4px 0 0; }
+.facts { list-style: none; margin: 12px 0 0; padding: 0; }
+.fact { display: flex; align-items: flex-start; gap: 8px; padding: 8px 0; border-top: 1px solid var(--border); font-size: 14px; line-height: 20px; }
+.fact > svg { flex: 0 0 24px; }
+.fact-text { display: flex; flex-direction: column; min-width: 0; overflow-wrap: anywhere; }
+.fact-label { font-weight: 700; }
+.card-actions { margin-top: 12px; }
+.map-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.map-links .btn-secondary { flex: 1 1 160px; }
+.card-actions .btn-link { display: flex; margin: 8px auto 0; }
+
+.trip-list { list-style: none; margin: 0; padding: 0; }
+.trip-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 48px; margin-top: 8px; padding: 0 8px 0 16px; border: 1px solid var(--border); border-radius: 12px; overflow-wrap: anywhere; }
+
+@media (min-width: 900px) {
+  main.prototype { padding: 32px; }
+  .first-body { display: flex; align-items: flex-start; gap: 32px; }
+  .first-body .timeline { flex: 0 1 720px; min-width: 0; }
+  .map-box { order: 2; flex: 1 1 0; min-width: 0; margin-bottom: 0; }
+  .clock { flex-basis: 160px; }
+}
+</style>
+</head>
+<body>
+<main class="prototype">
+<header class="prototype-head">
+<h1><span lang="en">Roadpal prototype: Day timeline</span><span lang="sv">Roadpal-prototyp: Dagens tidslinje</span></h1>
+<p lang="en">A static prototype for choosing a direction. Times come from an example departure.</p>
+<p lang="sv">En statisk prototyp för att välja riktning. Tiderna utgår från en exempelavresa.</p>
+</header>
+
+<section lang="en" data-section="first-view">
+<h2>Results, first view</h2>
+<p class="summary">Stockholm → Göteborg · 0-2, 3-5 · <button type="button" class="btn btn-link">Edit</button></p>
+<p class="notice">Demo: saved data</p>
+<p class="marker">Example departure 09:00</p>
+<div class="first-body">
+<div class="map-box">
+<div class="map-head"><button type="button" class="btn btn-link">Hide map</button></div>
+<svg class="route-map" viewBox="0 0 380 290" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+<path class="route" d="M336 42 L281 115 L183 171 L138 244 L93 241 L19 253"/>
+<circle class="city" cx="336" cy="42" r="6"/>
+<circle class="city" cx="19" cy="253" r="6"/>
+<text class="city-name" x="352" y="26" text-anchor="end">Stockholm</text>
+<text class="city-name" x="10" y="280">Göteborg</text>
+<g class="pin"><circle cx="281" cy="115" r="15"/><text x="281" y="115">1</text></g>
+<g class="pin"><circle cx="183" cy="171" r="15"/><text x="183" y="171">2</text></g>
+<g class="pin"><circle cx="138" cy="244" r="15"/><text x="138" y="244">3</text></g>
+<g class="pin"><circle cx="93" cy="241" r="15"/><text x="93" y="241">4</text></g>
+</svg>
+<p class="caption">Illustrative map, not to scale</p>
+</div>
+<ol class="timeline">
+<li class="point first"><p class="clock">09:00 Stockholm</p><div class="spine"><span class="dot"></span></div><div class="body"></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">1 h 18 min drive</p></li>
+<li class="stop"><p class="clock">about 10:18</p><div class="spine"><span class="node">1</span></div><div class="body"><div class="head"><h3 class="name">Playground, Brandkärr</h3><span class="pill">69 % match</span></div><p class="derived">Name derived from the surroundings</p><p class="meta"><span>1 h 18 min from the start</span><span>about 1 min detour</span></p></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">1 h 28 min drive</p></li>
+<li class="stop"><p class="clock">about 11:46</p><div class="spine"><span class="node">2</span></div><div class="body"><div class="head"><h3 class="name">Slomarps stadsdelslekplats</h3><span class="pill">69 % match</span></div><p class="meta"><span>2 h 46 min from the start</span><span>about 1 min detour</span></p></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">57 min drive</p></li>
+<li class="stop"><p class="clock">about 12:43</p><div class="spine"><span class="node">3</span></div><div class="body"><div class="head"><h3 class="name">Playground, Öxnehaga</h3><span class="pill">100 % match</span></div><p class="derived">Name derived from the surroundings</p><p class="meta"><span>3 h 43 min from the start</span><span>about 3 min detour</span></p></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">46 min drive</p></li>
+<li class="stop"><p class="clock">about 13:29</p><div class="spine"><span class="node">4</span></div><div class="body"><div class="head"><h3 class="name">Playground, Villastaden</h3><span class="pill">100 % match</span></div><p class="derived">Name derived from the surroundings</p><p class="meta"><span>4 h 29 min from the start</span><span>about 2 min detour</span></p></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">1 h 12 min drive</p></li>
+<li class="end last"><p class="clock">about 14:41</p><div class="spine"><span class="dot"></span></div><div class="body"><h3 class="name">Göteborg</h3></div></li>
+</ol>
+</div>
+<button type="button" class="btn btn-primary pause">We need a break NOW</button>
+</section>
+
+<section lang="en" data-section="stop-card">
+<h2>Stop card</h2>
+<ol class="timeline">
+<li class="point first"><p class="clock">09:00 Stockholm</p><div class="spine"><span class="dot"></span></div><div class="body"></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">1 h 18 min drive</p></li>
+<li class="stop"><p class="clock">about 10:18</p><div class="spine"><span class="node">1</span></div><div class="body"><div class="head"><h3 class="name">Playground, Brandkärr</h3><span class="pill">69 % match</span></div><p class="derived">Name derived from the surroundings</p><p class="meta"><span>1 h 18 min from the start</span><span>about 1 min detour</span></p></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">1 h 28 min drive</p></li>
+<li class="stop"><p class="clock">about 11:46</p><div class="spine"><span class="node">2</span></div><div class="body"><div class="head"><h3 class="name">Slomarps stadsdelslekplats</h3><span class="pill">69 % match</span></div><p class="meta"><span>2 h 46 min from the start</span><span>about 1 min detour</span></p></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">57 min drive</p></li>
+<li class="stop"><p class="clock">about 12:43</p><div class="spine"><span class="node">3</span></div><div class="body">
+<div class="head"><h3 class="name">Playground, Öxnehaga</h3><span class="pill">100 % match</span></div><p class="derived">Name derived from the surroundings</p><p class="meta"><span>3 h 43 min from the start</span><span>about 3 min detour</span></p>
+<div class="card">
+<p class="label">Why this match</p>
+<p class="reason">100 % match for your family, because it suits 0-2 years and 3-5 years and age fit is worked out from the play equipment (playhouse, swing), not tagged on the place (confidence: low).</p>
+<ul class="facts">
+<li class="fact"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20 V12 C4 8 6 6 10 6 H20 M16 2 L20 6 L16 10"/></svg><div class="fact-text"><span class="fact-label">Detour (estimated)</span><span>about 3 min detour</span></div></li>
+<li class="fact"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 C18 2 22 6 22 12 C22 18 18 22 12 22 C6 22 2 18 2 12 C2 6 6 2 12 2 Z M12 6 V12 L16 14"/></svg><div class="fact-text"><span class="fact-label">Typical time</span><span>not known</span></div></li>
+<li class="fact"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 C13 3 14 4 14 5 C14 6 13 7 12 7 C11 7 10 6 10 5 C10 4 11 3 12 3 Z M6 11 H18 M12 7 V15 M8 22 L12 15 L16 22"/></svg><div class="fact-text"><span class="fact-label">Age fit</span><span>worked out from play equipment, confidence: low</span></div></li>
+<li class="fact"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 2 H20 V22 H4 Z M12 5 C13 5 14 6 14 7 C14 8 13 9 12 9 C11 9 10 8 10 7 C10 6 11 5 12 5 Z M9 22 V13 C9 11 15 11 15 13 V22"/></svg><div class="fact-text"><span class="fact-label">Toilet</span><span>not known</span></div></li>
+<li class="fact"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12 H21 M5 12 V21 M19 12 V21 M9 8 H18 M7 6 C8 6 9 7 9 8 C9 9 8 10 7 10 C6 10 5 9 5 8 C5 7 6 6 7 6 Z"/></svg><div class="fact-text"><span class="fact-label">Changing table</span><span>not known</span></div></li>
+<li class="fact"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15 V12 C4 6 8 4 12 4 C16 4 20 6 20 12 V15 Z M20 12 L22 7 M8 17 C9 17 10 18 10 19 C10 20 9 21 8 21 C7 21 6 20 6 19 C6 18 7 17 8 17 Z M16 17 C17 17 18 18 18 19 C18 20 17 21 16 21 C15 21 14 20 14 19 C14 18 15 17 16 17 Z"/></svg><div class="fact-text"><span class="fact-label">Pram</span><span>not known</span></div></li>
+<li class="fact"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 C18 2 22 6 22 12 C22 18 18 22 12 22 C6 22 2 18 2 12 C2 6 6 2 12 2 Z M15 9 C14 8 10 8 9 10 C8 12 10 12 12 12 C14 12 16 12 15 14 C14 16 10 16 9 15"/></svg><div class="fact-text"><span class="fact-label">Price</span><span>not known</span></div></li>
+<li class="fact"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5 H21 V21 H3 Z M3 10 H21 M8 2 V7 M16 2 V7"/></svg><div class="fact-text"><span class="fact-label">Opening hours</span><span>not known</span></div></li>
+</ul>
+<div class="card-actions">
+<button type="button" class="btn btn-primary">Add to the trip</button>
+<div class="map-links"><button type="button" class="btn btn-secondary">Open in Google Maps</button><button type="button" class="btn btn-secondary">Open in Apple Maps</button></div>
+<button type="button" class="btn btn-link">Close</button>
+</div>
+</div>
+</div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">46 min drive</p></li>
+<li class="stop"><p class="clock">about 13:29</p><div class="spine"><span class="node">4</span></div><div class="body"><div class="head"><h3 class="name">Playground, Villastaden</h3><span class="pill">100 % match</span></div><p class="derived">Name derived from the surroundings</p><p class="meta"><span>4 h 29 min from the start</span><span>about 2 min detour</span></p></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">1 h 12 min drive</p></li>
+<li class="end last"><p class="clock">about 14:41</p><div class="spine"><span class="dot"></span></div><div class="body"><h3 class="name">Göteborg</h3></div></li>
+</ol>
+</section>
+
+<section lang="en" data-section="trip">
+<h2>The trip with one stop added</h2>
+<ol class="timeline">
+<li class="point first"><p class="clock">09:00 Stockholm</p><div class="spine"><span class="dot"></span></div><div class="body"></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">1 h 18 min drive</p></li>
+<li class="stop"><p class="clock">about 10:18</p><div class="spine"><span class="node">1</span></div><div class="body"><div class="head"><h3 class="name">Playground, Brandkärr</h3><span class="pill">69 % match</span></div><p class="derived">Name derived from the surroundings</p><p class="meta"><span>1 h 18 min from the start</span><span>about 1 min detour</span></p></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">1 h 28 min drive</p></li>
+<li class="stop"><p class="clock">about 11:46</p><div class="spine"><span class="node">2</span></div><div class="body"><div class="head"><h3 class="name">Slomarps stadsdelslekplats</h3><span class="pill">69 % match</span></div><p class="meta"><span>2 h 46 min from the start</span><span>about 1 min detour</span></p></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">57 min drive</p></li>
+<li class="stop"><p class="clock">about 12:43</p><div class="spine"><span class="node added">3</span></div><div class="body"><div class="head"><h3 class="name">Playground, Öxnehaga</h3><span class="pill">100 % match</span></div><p class="derived">Name derived from the surroundings</p><p class="meta"><span>3 h 43 min from the start</span><span>about 3 min detour</span></p><p class="added-line">Added to the trip</p></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">46 min drive</p></li>
+<li class="stop"><p class="clock">about 13:29</p><div class="spine"><span class="node">4</span></div><div class="body"><div class="head"><h3 class="name">Playground, Villastaden</h3><span class="pill">100 % match</span></div><p class="derived">Name derived from the surroundings</p><p class="meta"><span>4 h 29 min from the start</span><span>about 2 min detour</span></p></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">1 h 12 min drive</p></li>
+<li class="end last"><p class="clock">about 14:41</p><div class="spine"><span class="dot"></span></div><div class="body"><h3 class="name">Göteborg</h3></div></li>
+</ol>
+<h3 class="sub">The trip</h3>
+<ul class="trip-list">
+<li class="trip-row"><span>Playground, Öxnehaga</span><button type="button" class="btn btn-link">Remove</button></li>
+</ul>
+</section>
+
+<section lang="en" data-section="loading">
+<h2>Loading, one stretch failed</h2>
+<p class="tag">Example</p>
+<p class="progress">Looking for places along the way: 3 of 5</p>
+<ol class="timeline">
+<li class="point first"><p class="clock">09:00 Stockholm</p><div class="spine"><span class="dot"></span></div><div class="body"></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">1 h 18 min drive</p></li>
+<li class="stop"><p class="clock">about 10:18</p><div class="spine"><span class="node">1</span></div><div class="body"><div class="head"><h3 class="name">Playground, Brandkärr</h3><span class="pill">69 % match</span></div><p class="derived">Name derived from the surroundings</p><p class="meta"><span>1 h 18 min from the start</span><span>about 1 min detour</span></p></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">1 h 28 min drive</p></li>
+<li class="stop"><p class="clock">about 11:46</p><div class="spine"><span class="node">2</span></div><div class="body"><div class="head"><h3 class="name">Slomarps stadsdelslekplats</h3><span class="pill">69 % match</span></div><p class="meta"><span>2 h 46 min from the start</span><span>about 1 min detour</span></p></div></li>
+<li class="gap"><div class="clock"></div><div class="spine dashed"></div><div class="body"><p class="stretch-text">Places are unavailable for this stretch of the trip.</p><button type="button" class="btn btn-secondary">Try this stretch again</button></div></li>
+</ol>
+</section>
+
+<section lang="en" data-section="pause-now">
+<h2>Break list</h2>
+<p class="marker">Example position: 1 h 10 min into the trip</p>
+<h3 class="sub">Break stops near you</h3>
+<ol class="timeline solo">
+<li class="stop"><p class="clock">about 10:18</p><div class="spine"><span class="node">1</span></div><div class="body"><div class="head"><h3 class="name">Playground, Brandkärr</h3><span class="pill">69 % match</span></div><p class="derived">Name derived from the surroundings</p><p class="meta"><span>in about 8 min</span><span>about 1 min detour</span></p></div></li>
+</ol>
+</section>
+
+<section lang="sv" data-section="first-view">
+<h2>Resultat, första vyn</h2>
+<p class="summary">Stockholm → Göteborg · 0-2, 3-5 · <button type="button" class="btn btn-link">Ändra</button></p>
+<p class="notice">Demo: sparad data</p>
+<p class="marker">Exempel: avresa 09:00</p>
+<div class="first-body">
+<div class="map-box">
+<div class="map-head"><button type="button" class="btn btn-link">Dölj kartan</button></div>
+<svg class="route-map" viewBox="0 0 380 290" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+<path class="route" d="M336 42 L281 115 L183 171 L138 244 L93 241 L19 253"/>
+<circle class="city" cx="336" cy="42" r="6"/>
+<circle class="city" cx="19" cy="253" r="6"/>
+<text class="city-name" x="352" y="26" text-anchor="end">Stockholm</text>
+<text class="city-name" x="10" y="280">Göteborg</text>
+<g class="pin"><circle cx="281" cy="115" r="15"/><text x="281" y="115">1</text></g>
+<g class="pin"><circle cx="183" cy="171" r="15"/><text x="183" y="171">2</text></g>
+<g class="pin"><circle cx="138" cy="244" r="15"/><text x="138" y="244">3</text></g>
+<g class="pin"><circle cx="93" cy="241" r="15"/><text x="93" y="241">4</text></g>
+</svg>
+<p class="caption">Illustrativ karta, inte skalenlig</p>
+</div>
+<ol class="timeline">
+<li class="point first"><p class="clock">09:00 Stockholm</p><div class="spine"><span class="dot"></span></div><div class="body"></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">1 tim 18 min körning</p></li>
+<li class="stop"><p class="clock">ca 10:18</p><div class="spine"><span class="node">1</span></div><div class="body"><div class="head"><h3 class="name">Lekplats, Brandkärr</h3><span class="pill">69 % matchning</span></div><p class="derived">Namnet är härlett från omgivningen</p><p class="meta"><span>1 tim 18 min från start</span><span>ca 1 min omväg</span></p></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">1 tim 28 min körning</p></li>
+<li class="stop"><p class="clock">ca 11:46</p><div class="spine"><span class="node">2</span></div><div class="body"><div class="head"><h3 class="name">Slomarps stadsdelslekplats</h3><span class="pill">69 % matchning</span></div><p class="meta"><span>2 tim 46 min från start</span><span>ca 1 min omväg</span></p></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">57 min körning</p></li>
+<li class="stop"><p class="clock">ca 12:43</p><div class="spine"><span class="node">3</span></div><div class="body"><div class="head"><h3 class="name">Lekplats, Öxnehaga</h3><span class="pill">100 % matchning</span></div><p class="derived">Namnet är härlett från omgivningen</p><p class="meta"><span>3 tim 43 min från start</span><span>ca 3 min omväg</span></p></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">46 min körning</p></li>
+<li class="stop"><p class="clock">ca 13:29</p><div class="spine"><span class="node">4</span></div><div class="body"><div class="head"><h3 class="name">Lekplats, Villastaden</h3><span class="pill">100 % matchning</span></div><p class="derived">Namnet är härlett från omgivningen</p><p class="meta"><span>4 tim 29 min från start</span><span>ca 2 min omväg</span></p></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">1 tim 12 min körning</p></li>
+<li class="end last"><p class="clock">ca 14:41</p><div class="spine"><span class="dot"></span></div><div class="body"><h3 class="name">Göteborg</h3></div></li>
+</ol>
+</div>
+<button type="button" class="btn btn-primary pause">Vi behöver en paus NU</button>
+</section>
+
+<section lang="sv" data-section="stop-card">
+<h2>Stoppkort</h2>
+<ol class="timeline">
+<li class="point first"><p class="clock">09:00 Stockholm</p><div class="spine"><span class="dot"></span></div><div class="body"></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">1 tim 18 min körning</p></li>
+<li class="stop"><p class="clock">ca 10:18</p><div class="spine"><span class="node">1</span></div><div class="body"><div class="head"><h3 class="name">Lekplats, Brandkärr</h3><span class="pill">69 % matchning</span></div><p class="derived">Namnet är härlett från omgivningen</p><p class="meta"><span>1 tim 18 min från start</span><span>ca 1 min omväg</span></p></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">1 tim 28 min körning</p></li>
+<li class="stop"><p class="clock">ca 11:46</p><div class="spine"><span class="node">2</span></div><div class="body"><div class="head"><h3 class="name">Slomarps stadsdelslekplats</h3><span class="pill">69 % matchning</span></div><p class="meta"><span>2 tim 46 min från start</span><span>ca 1 min omväg</span></p></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">57 min körning</p></li>
+<li class="stop"><p class="clock">ca 12:43</p><div class="spine"><span class="node">3</span></div><div class="body">
+<div class="head"><h3 class="name">Lekplats, Öxnehaga</h3><span class="pill">100 % matchning</span></div><p class="derived">Namnet är härlett från omgivningen</p><p class="meta"><span>3 tim 43 min från start</span><span>ca 3 min omväg</span></p>
+<div class="card">
+<p class="label">Varför den passar</p>
+<p class="reason">100 % matchning för er familj, eftersom den passar 0-2 år och 3-5 år och ålderspassningen räknas ut från lekutrustningen (lekstuga, gunga), den är inte angiven på platsen (säkerhet: låg).</p>
+<ul class="facts">
+<li class="fact"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20 V12 C4 8 6 6 10 6 H20 M16 2 L20 6 L16 10"/></svg><div class="fact-text"><span class="fact-label">Omväg (uppskattad)</span><span>ca 3 min omväg</span></div></li>
+<li class="fact"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 C18 2 22 6 22 12 C22 18 18 22 12 22 C6 22 2 18 2 12 C2 6 6 2 12 2 Z M12 6 V12 L16 14"/></svg><div class="fact-text"><span class="fact-label">Vanlig tid</span><span>okänt</span></div></li>
+<li class="fact"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 C13 3 14 4 14 5 C14 6 13 7 12 7 C11 7 10 6 10 5 C10 4 11 3 12 3 Z M6 11 H18 M12 7 V15 M8 22 L12 15 L16 22"/></svg><div class="fact-text"><span class="fact-label">Ålderspassning</span><span>uträknat från lekutrustning, säkerhet: låg</span></div></li>
+<li class="fact"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 2 H20 V22 H4 Z M12 5 C13 5 14 6 14 7 C14 8 13 9 12 9 C11 9 10 8 10 7 C10 6 11 5 12 5 Z M9 22 V13 C9 11 15 11 15 13 V22"/></svg><div class="fact-text"><span class="fact-label">Toalett</span><span>okänt</span></div></li>
+<li class="fact"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12 H21 M5 12 V21 M19 12 V21 M9 8 H18 M7 6 C8 6 9 7 9 8 C9 9 8 10 7 10 C6 10 5 9 5 8 C5 7 6 6 7 6 Z"/></svg><div class="fact-text"><span class="fact-label">Skötbord</span><span>okänt</span></div></li>
+<li class="fact"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15 V12 C4 6 8 4 12 4 C16 4 20 6 20 12 V15 Z M20 12 L22 7 M8 17 C9 17 10 18 10 19 C10 20 9 21 8 21 C7 21 6 20 6 19 C6 18 7 17 8 17 Z M16 17 C17 17 18 18 18 19 C18 20 17 21 16 21 C15 21 14 20 14 19 C14 18 15 17 16 17 Z"/></svg><div class="fact-text"><span class="fact-label">Barnvagn</span><span>okänt</span></div></li>
+<li class="fact"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 C18 2 22 6 22 12 C22 18 18 22 12 22 C6 22 2 18 2 12 C2 6 6 2 12 2 Z M15 9 C14 8 10 8 9 10 C8 12 10 12 12 12 C14 12 16 12 15 14 C14 16 10 16 9 15"/></svg><div class="fact-text"><span class="fact-label">Pris</span><span>okänt</span></div></li>
+<li class="fact"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5 H21 V21 H3 Z M3 10 H21 M8 2 V7 M16 2 V7"/></svg><div class="fact-text"><span class="fact-label">Öppettider</span><span>okänt</span></div></li>
+</ul>
+<div class="card-actions">
+<button type="button" class="btn btn-primary">Lägg till i resan</button>
+<div class="map-links"><button type="button" class="btn btn-secondary">Öppna i Google Maps</button><button type="button" class="btn btn-secondary">Öppna i Apple Maps</button></div>
+<button type="button" class="btn btn-link">Stäng</button>
+</div>
+</div>
+</div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">46 min körning</p></li>
+<li class="stop"><p class="clock">ca 13:29</p><div class="spine"><span class="node">4</span></div><div class="body"><div class="head"><h3 class="name">Lekplats, Villastaden</h3><span class="pill">100 % matchning</span></div><p class="derived">Namnet är härlett från omgivningen</p><p class="meta"><span>4 tim 29 min från start</span><span>ca 2 min omväg</span></p></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">1 tim 12 min körning</p></li>
+<li class="end last"><p class="clock">ca 14:41</p><div class="spine"><span class="dot"></span></div><div class="body"><h3 class="name">Göteborg</h3></div></li>
+</ol>
+</section>
+
+<section lang="sv" data-section="trip">
+<h2>Resan med ett tillagt stopp</h2>
+<ol class="timeline">
+<li class="point first"><p class="clock">09:00 Stockholm</p><div class="spine"><span class="dot"></span></div><div class="body"></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">1 tim 18 min körning</p></li>
+<li class="stop"><p class="clock">ca 10:18</p><div class="spine"><span class="node">1</span></div><div class="body"><div class="head"><h3 class="name">Lekplats, Brandkärr</h3><span class="pill">69 % matchning</span></div><p class="derived">Namnet är härlett från omgivningen</p><p class="meta"><span>1 tim 18 min från start</span><span>ca 1 min omväg</span></p></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">1 tim 28 min körning</p></li>
+<li class="stop"><p class="clock">ca 11:46</p><div class="spine"><span class="node">2</span></div><div class="body"><div class="head"><h3 class="name">Slomarps stadsdelslekplats</h3><span class="pill">69 % matchning</span></div><p class="meta"><span>2 tim 46 min från start</span><span>ca 1 min omväg</span></p></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">57 min körning</p></li>
+<li class="stop"><p class="clock">ca 12:43</p><div class="spine"><span class="node added">3</span></div><div class="body"><div class="head"><h3 class="name">Lekplats, Öxnehaga</h3><span class="pill">100 % matchning</span></div><p class="derived">Namnet är härlett från omgivningen</p><p class="meta"><span>3 tim 43 min från start</span><span>ca 3 min omväg</span></p><p class="added-line">Tillagd i resan</p></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">46 min körning</p></li>
+<li class="stop"><p class="clock">ca 13:29</p><div class="spine"><span class="node">4</span></div><div class="body"><div class="head"><h3 class="name">Lekplats, Villastaden</h3><span class="pill">100 % matchning</span></div><p class="derived">Namnet är härlett från omgivningen</p><p class="meta"><span>4 tim 29 min från start</span><span>ca 2 min omväg</span></p></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">1 tim 12 min körning</p></li>
+<li class="end last"><p class="clock">ca 14:41</p><div class="spine"><span class="dot"></span></div><div class="body"><h3 class="name">Göteborg</h3></div></li>
+</ol>
+<h3 class="sub">Resan</h3>
+<ul class="trip-list">
+<li class="trip-row"><span>Lekplats, Öxnehaga</span><button type="button" class="btn btn-link">Ta bort</button></li>
+</ul>
+</section>
+
+<section lang="sv" data-section="loading">
+<h2>Laddar, en sträcka misslyckades</h2>
+<p class="tag">Exempel</p>
+<p class="progress">Letar efter platser längs vägen: 3 av 5</p>
+<ol class="timeline">
+<li class="point first"><p class="clock">09:00 Stockholm</p><div class="spine"><span class="dot"></span></div><div class="body"></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">1 tim 18 min körning</p></li>
+<li class="stop"><p class="clock">ca 10:18</p><div class="spine"><span class="node">1</span></div><div class="body"><div class="head"><h3 class="name">Lekplats, Brandkärr</h3><span class="pill">69 % matchning</span></div><p class="derived">Namnet är härlett från omgivningen</p><p class="meta"><span>1 tim 18 min från start</span><span>ca 1 min omväg</span></p></div></li>
+<li class="drive"><div class="clock"></div><div class="spine"></div><p class="drive-label">1 tim 28 min körning</p></li>
+<li class="stop"><p class="clock">ca 11:46</p><div class="spine"><span class="node">2</span></div><div class="body"><div class="head"><h3 class="name">Slomarps stadsdelslekplats</h3><span class="pill">69 % matchning</span></div><p class="meta"><span>2 tim 46 min från start</span><span>ca 1 min omväg</span></p></div></li>
+<li class="gap"><div class="clock"></div><div class="spine dashed"></div><div class="body"><p class="stretch-text">Platser är inte tillgängliga för den här delen av resan.</p><button type="button" class="btn btn-secondary">Försök igen med den här delen</button></div></li>
+</ol>
+</section>
+
+<section lang="sv" data-section="pause-now">
+<h2>Pauslistan</h2>
+<p class="marker">Exempelposition: 1 tim 10 min in på resan</p>
+<h3 class="sub">Pausstopp nära dig</h3>
+<ol class="timeline solo">
+<li class="stop"><p class="clock">ca 10:18</p><div class="spine"><span class="node">1</span></div><div class="body"><div class="head"><h3 class="name">Lekplats, Brandkärr</h3><span class="pill">69 % matchning</span></div><p class="derived">Namnet är härlett från omgivningen</p><p class="meta"><span>om ca 8 min</span><span>ca 1 min omväg</span></p></div></li>
+</ol>
+</section>
+</main>
+</body>
+</html>

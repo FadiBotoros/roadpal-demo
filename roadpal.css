@@ -49,7 +49,7 @@ section button.primary { background: var(--primary); color: var(--on-primary); }
 section button.link { border-color: transparent; background: none; }
 .card-title { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin-bottom: var(--space-2); }
 .badge-number { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: var(--primary); color: var(--on-primary); font-weight: 700; font-size: 0.875rem; }
-.badge-match { padding: var(--space-1) var(--space-3); border: 1px solid var(--accent); border-radius: 999px; font-size: 0.875rem; }
+.badge-match { flex: 0 0 auto; white-space: nowrap; padding: var(--space-1) var(--space-3); border: 1px solid var(--accent); border-radius: 999px; font-size: 0.875rem; }
 .card-why summary { min-height: var(--target); display: flex; align-items: center; cursor: pointer; color: var(--primary); }
 .chosen { list-style: none; margin: var(--space-2) 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-2); }
 .chosen li { display: inline-flex; align-items: center; gap: var(--space-2); padding-left: var(--space-3); border: 1px solid var(--border); border-radius: 999px; background: var(--surface); }
@@ -70,7 +70,7 @@ body > header { display: flex; flex-wrap: wrap; align-items: center; justify-con
 body > header h1 { order: 1; margin: 0; }
 .lang-switch { order: 2; min-height: var(--target); padding: 0 var(--space-4); border: 1px solid var(--primary); border-radius: var(--radius); background: var(--surface); color: var(--primary); font: inherit; cursor: pointer; }
 body > header p { order: 3; flex-basis: 100%; margin: 0; color: var(--text-muted); }
-.card-title button { min-height: var(--target); margin: 0; padding: 0; border-color: transparent; background: none; color: var(--text); font-weight: 600; text-align: left; text-decoration: underline; text-decoration-color: var(--primary); text-underline-offset: 4px; }
+.card-title button { min-height: var(--target); margin: 0; padding: 0; border-color: transparent; background: none; color: var(--text); font-weight: 600; text-align: left; text-decoration: underline; text-decoration-color: var(--primary); text-underline-offset: 4px; overflow-wrap: anywhere; }
 section button.pause-now { border-color: var(--accent); border-width: 2px; color: var(--text); font-weight: 600; }
 html body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 1.5; }
 body > header h1 { font-size: 1.5rem; line-height: 2rem; font-weight: 700; }
