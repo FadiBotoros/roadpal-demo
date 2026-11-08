@@ -42,6 +42,8 @@
         #notice { font-size: 0.85rem; }
         button[aria-pressed="true"] { font-weight: bold; }
         #more-options summary { min-height: 48px; display: flex; align-items: center; cursor: pointer; }
+        .map-toggle { min-height: var(--target); padding: 0 var(--space-4); background: none; border: 0; color: var(--primary); font: inherit; text-decoration: underline; cursor: pointer; }
+        body > button.map-toggle:not([hidden]) { display: block; margin-left: auto; margin-right: var(--space-4); }
         .error { color: var(--danger); margin: 4px 0; }
         .stop-marker { width: 28px; height: 28px; padding: 0; border-radius: 50%; border: 2px solid var(--surface); background: var(--primary); color: var(--on-primary); font: bold 14px system-ui, sans-serif; cursor: pointer; }
         .pause-marker { background: var(--text); color: var(--background); }
@@ -49,11 +51,12 @@
         .busy::after { content: ""; display: inline-block; width: 0.8em; height: 0.8em; margin-left: 0.5em; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; vertical-align: -0.1em; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
         @media (prefers-reduced-motion: reduce) { .busy::after { display: none; } }
-        @media (min-width: 900px) {
+        @media (min-width: 1024px) {
             body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
             body > script { display: none; }
             body > header, body > section { grid-column: 1; }
-            #map { grid-column: 2; grid-row: 1 / span 4; position: sticky; top: 0; height: 100vh; }
+            body > button.map-toggle:not([hidden]) { grid-column: 2; grid-row: 1 / span 20; justify-self: end; align-self: start; position: sticky; top: 0; z-index: 1; margin: var(--space-2); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+            #map { grid-column: 2; grid-row: 1 / span 20; position: sticky; top: 0; height: 100vh; }
         }
     </style>
 </head>
