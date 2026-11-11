@@ -175,6 +175,14 @@ html body .search-row button svg.icon { width: 24px; height: 24px; fill: none; s
 .trip-row .timeline-name { grid-column: 3; grid-row: 2; min-width: 0; padding: 0 var(--space-2); font-size: 1rem; line-height: 1.5rem; overflow-wrap: break-word; }
 .trip-row .link { grid-column: 4; grid-row: 2; min-height: var(--target); min-width: var(--target); margin: 0; padding: var(--space-2); border-color: transparent; background: none; color: var(--primary); text-decoration: underline; }
 .trip-row .link:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.trip-row .trip-navigate { grid-column: 3; grid-row: 3; display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--space-3); min-width: 0; padding: 0 var(--space-2) var(--space-1); color: var(--text-muted); font-size: 0.875rem; line-height: 1.25rem; }
+.trip-navigate a { display: inline-flex; align-items: center; min-height: var(--target); padding: 0 var(--space-2); color: var(--primary); text-decoration: underline; text-underline-offset: 4px; overflow-wrap: anywhere; }
+.start-driving { margin: var(--space-5) 0 0; }
+.start-driving-leg { margin: 0 0 var(--space-3); color: var(--text-muted); font-size: 0.875rem; line-height: 1.25rem; overflow-wrap: anywhere; }
+.start-driving-maps { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-2); }
+.start-driving-maps a { flex: 1 1 10rem; display: inline-flex; align-items: center; justify-content: center; min-height: var(--target); padding: 0 var(--space-4); border: 1px solid var(--primary); border-radius: var(--radius); color: var(--primary); text-decoration: none; text-align: center; margin: 0; }
+.start-driving-note { margin: var(--space-2) 0 var(--space-3); color: var(--text-muted); font-size: 0.875rem; line-height: 1.25rem; }
+.start-driving-whole { display: inline-flex; align-items: center; min-height: var(--target); color: var(--primary); text-decoration: underline; text-underline-offset: 4px; overflow-wrap: anywhere; }
 .timeline-failed { color: var(--text); }
 .timeline-failed > .start-action { grid-column: 3; justify-self: start; margin-top: var(--space-2); }
 .timeline-start:not([hidden]) > .timeline-failed > .start-action { margin-top: var(--space-2); }
