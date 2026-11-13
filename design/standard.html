@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Roadpal prototype: Category standard</title>
 <style>
+.dur { white-space: nowrap; }
 :root {
   --background: #FFF9F0; --surface: #FFFFFF; --text: #1F2933; --text-muted: #52606D;
   --primary: #1E6F5C; --on-primary: #FFFFFF; --accent: #F4A340; --border: #D9D2C5; --danger: #B42318;
@@ -156,7 +157,7 @@ details p { margin: 0 0 var(--space-2); font-size: 14px; line-height: 20px; }
 <div class="screen">
 <div class="top">
 <div class="top-row">
-<p class="trip-sum">Stockholm → Göteborg · 0-2, 3-5 · 1 h 30 min</p>
+<p class="trip-sum">Stockholm → Göteborg · 0-2, 3-5 · <span class="dur">1 h 30 min</span></p>
 <button type="button" class="btn-link">Edit</button>
 </div>
 <p class="notice">Demo: saved data</p>
@@ -172,21 +173,21 @@ details p { margin: 0 0 var(--space-2); font-size: 14px; line-height: 20px; }
 <text class="city" x="320" y="24" text-anchor="end">Stockholm</text>
 <text class="city" x="8" y="258">Göteborg</text>
 </svg>
-<figcaption><span>Illustrative map, not to scale</span><span>Whole route 5 h 41 min</span></figcaption>
+<figcaption><span>Illustrative map, not to scale</span><span class="dur">Whole route 5 h 41 min</span></figcaption>
 </figure>
 <div class="list">
 <p class="mark">Example departure 09:00</p>
 <article class="card">
 <div class="card-head"><span class="pin-badge">1</span><h3>Spöklekplatsen</h3></div>
 <p class="match"><span class="badge">74 % match</span></p>
-<ul class="facts"><li>1 h 18 min from the start</li><li>about 2 min detour</li><li>about 10:18</li></ul>
+<ul class="facts"><li><span class="dur">1 h 18 min from the start</span></li><li><span class="dur">about 2 min detour</span></li><li>about 10:18</li></ul>
 <details><summary>Why this match</summary><p>74 % match for your family, because age fit is not known: no play equipment is tagged, plus 5 for a public playground.</p></details>
 <p class="source">OpenStreetMap</p>
 </article>
 <article class="card">
 <div class="card-head"><span class="pin-badge">2</span><h3>Slomarps stadsdelslekplats</h3></div>
 <p class="match"><span class="badge">74 % match</span></p>
-<ul class="facts"><li>2 h 46 min from the start</li><li>about 1 min detour</li><li>about 11:46</li></ul>
+<ul class="facts"><li><span class="dur">2 h 46 min from the start</span></li><li><span class="dur">about 1 min detour</span></li><li>about 11:46</li></ul>
 <details><summary>Why this match</summary><p>74 % match for your family, because age fit is not known: no play equipment is tagged, plus 5 for a public playground.</p></details>
 <p class="source">OpenStreetMap</p>
 </article>
@@ -194,7 +195,7 @@ details p { margin: 0 0 var(--space-2); font-size: 14px; line-height: 20px; }
 <div class="card-head"><span class="pin-badge">3</span><h3>Playground, Öxnehaga</h3></div>
 <p class="derived">Name derived from the surroundings</p>
 <p class="match"><span class="badge">100 % match</span></p>
-<ul class="facts"><li>3 h 43 min from the start</li><li>about 3 min detour</li><li>about 12:43</li></ul>
+<ul class="facts"><li><span class="dur">3 h 43 min from the start</span></li><li><span class="dur">about 3 min detour</span></li><li>about 12:43</li></ul>
 <details><summary>Why this match</summary><p>100 % match for your family, because it suits 0-2 years and 3-5 years and age fit is worked out from the play equipment (playhouse, swing), not tagged on the place (confidence: low).</p></details>
 <p class="source">OpenStreetMap</p>
 </article>
@@ -202,7 +203,7 @@ details p { margin: 0 0 var(--space-2); font-size: 14px; line-height: 20px; }
 <div class="card-head"><span class="pin-badge">4</span><h3>Playground, Villastaden</h3></div>
 <p class="derived">Name derived from the surroundings</p>
 <p class="match"><span class="badge">100 % match</span></p>
-<ul class="facts"><li>4 h 29 min from the start</li><li>about 2 min detour</li><li>about 13:29</li></ul>
+<ul class="facts"><li><span class="dur">4 h 29 min from the start</span></li><li><span class="dur">about 2 min detour</span></li><li>about 13:29</li></ul>
 <details><summary>Why this match</summary><p>100 % match for your family, because it suits 0-2 years and 3-5 years and age fit is worked out from the play equipment (basketswing, seesaw, swing), not tagged on the place (confidence: low).</p></details>
 <p class="source">OpenStreetMap</p>
 </article>
@@ -216,7 +217,7 @@ details p { margin: 0 0 var(--space-2); font-size: 14px; line-height: 20px; }
 <div class="screen sheet-screen">
 <div class="top">
 <div class="top-row">
-<p class="trip-sum">Stockholm → Göteborg · 0-2, 3-5 · 1 h 30 min</p>
+<p class="trip-sum">Stockholm → Göteborg · 0-2, 3-5 · <span class="dur">1 h 30 min</span></p>
 <button type="button" class="btn-link">Edit</button>
 </div>
 </div>
@@ -241,7 +242,7 @@ details p { margin: 0 0 var(--space-2); font-size: 14px; line-height: 20px; }
 <p class="match"><span class="badge">100 % match</span></p>
 <p class="reason">100 % match for your family, because it suits 0-2 years and 3-5 years and age fit is worked out from the play equipment (playhouse, swing), not tagged on the place (confidence: low).</p>
 <ul class="facts-grid">
-<li><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20 V12 C4 8 6 6 10 6 H20 M16 2 L20 6 L16 10"/></svg><span class="fact"><span class="value">about 3 min detour</span></span></li>
+<li><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20 V12 C4 8 6 6 10 6 H20 M16 2 L20 6 L16 10"/></svg><span class="fact"><span class="dur">about 3 min detour</span></span></li>
 <li><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 C18 2 22 6 22 12 C22 18 18 22 12 22 C6 22 2 18 2 12 C2 6 6 2 12 2 Z M12 6 V12 L16 14"/></svg><span class="fact"><span class="label">Typical time</span><span class="value">not known</span></span></li>
 <li><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 C13 3 14 4 14 5 C14 6 13 7 12 7 C11 7 10 6 10 5 C10 4 11 3 12 3 Z M6 11 H18 M12 7 V15 M8 22 L12 15 L16 22"/></svg><span class="fact"><span class="label">Age fit</span><span class="value">0-2 years, 3-5 years</span><span class="note">worked out from play equipment, confidence: low</span></span></li>
 <li><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 2 H20 V22 H4 Z M12 5 C13 5 14 6 14 7 C14 8 13 9 12 9 C11 9 10 8 10 7 C10 6 11 5 12 5 Z M9 22 V13 C9 11 15 11 15 13 V22"/></svg><span class="fact"><span class="label">Toilet</span><span class="value">not known</span></span></li>
@@ -252,7 +253,7 @@ details p { margin: 0 0 var(--space-2); font-size: 14px; line-height: 20px; }
 </ul>
 <p class="source">OpenStreetMap</p>
 <div class="actions">
-<button type="button" class="btn btn-primary btn-full">Add to the trip</button>
+<button type="button" class="btn btn-primary btn-full">Stop here instead</button>
 <div class="map-links">
 <button type="button" class="btn btn-secondary">Open in Google Maps</button>
 <button type="button" class="btn btn-secondary">Open in Apple Maps</button>
@@ -269,7 +270,7 @@ details p { margin: 0 0 var(--space-2); font-size: 14px; line-height: 20px; }
 <div class="screen">
 <div class="top">
 <div class="top-row">
-<p class="trip-sum">Stockholm → Göteborg · 0-2, 3-5 · 1 h 30 min</p>
+<p class="trip-sum">Stockholm → Göteborg · 0-2, 3-5 · <span class="dur">1 h 30 min</span></p>
 <button type="button" class="btn-link">Edit</button>
 </div>
 </div>
@@ -284,15 +285,15 @@ details p { margin: 0 0 var(--space-2); font-size: 14px; line-height: 20px; }
 <text class="city" x="320" y="24" text-anchor="end">Stockholm</text>
 <text class="city" x="8" y="258">Göteborg</text>
 </svg>
-<figcaption><span>Illustrative map, not to scale</span><span>Whole route 5 h 41 min</span></figcaption>
+<figcaption><span>Illustrative map, not to scale</span><span class="dur">Whole route 5 h 41 min</span></figcaption>
 </figure>
 <div class="list">
 <article class="card is-added">
 <div class="card-head"><span class="pin-badge">3</span><h3>Playground, Öxnehaga</h3></div>
 <p class="derived">Name derived from the surroundings</p>
 <p class="match"><span class="badge">100 % match</span></p>
-<ul class="facts"><li>3 h 43 min from the start</li><li>about 3 min detour</li><li>about 12:43</li></ul>
-<p class="added">Added to the trip</p>
+<ul class="facts"><li><span class="dur">3 h 43 min from the start</span></li><li><span class="dur">about 3 min detour</span></li><li>about 12:43</li></ul>
+<p class="added">In the trip</p>
 <p class="source">OpenStreetMap</p>
 </article>
 <div class="trip-list">
@@ -308,7 +309,7 @@ details p { margin: 0 0 var(--space-2); font-size: 14px; line-height: 20px; }
 <div class="screen">
 <div class="top">
 <div class="top-row">
-<p class="trip-sum">Stockholm → Göteborg · 0-2, 3-5 · 1 h 30 min</p>
+<p class="trip-sum">Stockholm → Göteborg · 0-2, 3-5 · <span class="dur">1 h 30 min</span></p>
 <button type="button" class="btn-link">Edit</button>
 </div>
 </div>
@@ -322,7 +323,7 @@ details p { margin: 0 0 var(--space-2); font-size: 14px; line-height: 20px; }
 <text class="city" x="320" y="24" text-anchor="end">Stockholm</text>
 <text class="city" x="8" y="258">Göteborg</text>
 </svg>
-<figcaption><span>Illustrative map, not to scale</span><span>Whole route 5 h 41 min</span></figcaption>
+<figcaption><span>Illustrative map, not to scale</span><span class="dur">Whole route 5 h 41 min</span></figcaption>
 </figure>
 <div class="list">
 <p class="mark">Example</p>
@@ -330,14 +331,14 @@ details p { margin: 0 0 var(--space-2); font-size: 14px; line-height: 20px; }
 <article class="card">
 <div class="card-head"><span class="pin-badge">1</span><h3>Spöklekplatsen</h3></div>
 <p class="match"><span class="badge">74 % match</span></p>
-<ul class="facts"><li>1 h 18 min from the start</li><li>about 2 min detour</li><li>about 10:18</li></ul>
+<ul class="facts"><li><span class="dur">1 h 18 min from the start</span></li><li><span class="dur">about 2 min detour</span></li><li>about 10:18</li></ul>
 <details><summary>Why this match</summary><p>74 % match for your family, because age fit is not known: no play equipment is tagged, plus 5 for a public playground.</p></details>
 <p class="source">OpenStreetMap</p>
 </article>
 <article class="card">
 <div class="card-head"><span class="pin-badge">2</span><h3>Slomarps stadsdelslekplats</h3></div>
 <p class="match"><span class="badge">74 % match</span></p>
-<ul class="facts"><li>2 h 46 min from the start</li><li>about 1 min detour</li><li>about 11:46</li></ul>
+<ul class="facts"><li><span class="dur">2 h 46 min from the start</span></li><li><span class="dur">about 1 min detour</span></li><li>about 11:46</li></ul>
 <details><summary>Why this match</summary><p>74 % match for your family, because age fit is not known: no play equipment is tagged, plus 5 for a public playground.</p></details>
 <p class="source">OpenStreetMap</p>
 </article>
@@ -354,7 +355,7 @@ details p { margin: 0 0 var(--space-2); font-size: 14px; line-height: 20px; }
 <div class="screen">
 <div class="top">
 <div class="top-row">
-<p class="trip-sum">Stockholm → Göteborg · 0-2, 3-5 · 1 h 30 min</p>
+<p class="trip-sum">Stockholm → Göteborg · 0-2, 3-5 · <span class="dur">1 h 30 min</span></p>
 <button type="button" class="btn-link">Edit</button>
 </div>
 </div>
@@ -369,15 +370,15 @@ details p { margin: 0 0 var(--space-2); font-size: 14px; line-height: 20px; }
 <text class="city" x="320" y="24" text-anchor="end">Stockholm</text>
 <text class="city" x="8" y="258">Göteborg</text>
 </svg>
-<figcaption><span>Illustrative map, not to scale</span><span>Whole route 5 h 41 min</span></figcaption>
+<figcaption><span>Illustrative map, not to scale</span><span class="dur">Whole route 5 h 41 min</span></figcaption>
 </figure>
 <div class="list">
-<p class="mark">Example position: 1 h 10 min into the trip</p>
+<p class="mark"><span class="dur">Example position: 1 h 10 min into the trip</span></p>
 <h3 class="list-title">Break stops near you</h3>
 <article class="card">
 <div class="card-head"><span class="pin-badge">1</span><h3>Spöklekplatsen</h3></div>
 <p class="match"><span class="badge">74 % match</span></p>
-<ul class="facts"><li>in about 8 min</li><li>about 2 min detour</li></ul>
+<ul class="facts"><li><span class="dur">in about 8 min</span></li><li><span class="dur">about 2 min detour</span></li></ul>
 <p class="source">OpenStreetMap</p>
 </article>
 </div>
@@ -389,7 +390,7 @@ details p { margin: 0 0 var(--space-2); font-size: 14px; line-height: 20px; }
 <div class="screen">
 <div class="top">
 <div class="top-row">
-<p class="trip-sum">Stockholm → Göteborg · 0-2, 3-5 · 1 tim 30 min</p>
+<p class="trip-sum">Stockholm → Göteborg · 0-2, 3-5 · <span class="dur">1 tim 30 min</span></p>
 <button type="button" class="btn-link">Ändra</button>
 </div>
 <p class="notice">Demo: sparad data</p>
@@ -405,21 +406,21 @@ details p { margin: 0 0 var(--space-2); font-size: 14px; line-height: 20px; }
 <text class="city" x="320" y="24" text-anchor="end">Stockholm</text>
 <text class="city" x="8" y="258">Göteborg</text>
 </svg>
-<figcaption><span>Illustrativ karta, inte skalenlig</span><span>Hela resan 5 tim 41 min</span></figcaption>
+<figcaption><span>Illustrativ karta, inte skalenlig</span><span class="dur">Hela resan 5 tim 41 min</span></figcaption>
 </figure>
 <div class="list">
 <p class="mark">Exempel: avresa 09:00</p>
 <article class="card">
 <div class="card-head"><span class="pin-badge">1</span><h3>Spöklekplatsen</h3></div>
 <p class="match"><span class="badge">74 % matchning</span></p>
-<ul class="facts"><li>1 tim 18 min från start</li><li>ca 2 min omväg</li><li>ca 10:18</li></ul>
+<ul class="facts"><li><span class="dur">1 tim 18 min från start</span></li><li><span class="dur">ca 2 min omväg</span></li><li>ca 10:18</li></ul>
 <details><summary>Varför den passar</summary><p>74 % matchning för er familj, eftersom ålderspassningen är okänd: ingen lekutrustning är angiven, plus 5 för en allmän lekplats.</p></details>
 <p class="source">OpenStreetMap</p>
 </article>
 <article class="card">
 <div class="card-head"><span class="pin-badge">2</span><h3>Slomarps stadsdelslekplats</h3></div>
 <p class="match"><span class="badge">74 % matchning</span></p>
-<ul class="facts"><li>2 tim 46 min från start</li><li>ca 1 min omväg</li><li>ca 11:46</li></ul>
+<ul class="facts"><li><span class="dur">2 tim 46 min från start</span></li><li><span class="dur">ca 1 min omväg</span></li><li>ca 11:46</li></ul>
 <details><summary>Varför den passar</summary><p>74 % matchning för er familj, eftersom ålderspassningen är okänd: ingen lekutrustning är angiven, plus 5 för en allmän lekplats.</p></details>
 <p class="source">OpenStreetMap</p>
 </article>
@@ -427,7 +428,7 @@ details p { margin: 0 0 var(--space-2); font-size: 14px; line-height: 20px; }
 <div class="card-head"><span class="pin-badge">3</span><h3>Lekplats, Öxnehaga</h3></div>
 <p class="derived">Namnet är härlett från omgivningen</p>
 <p class="match"><span class="badge">100 % matchning</span></p>
-<ul class="facts"><li>3 tim 43 min från start</li><li>ca 3 min omväg</li><li>ca 12:43</li></ul>
+<ul class="facts"><li><span class="dur">3 tim 43 min från start</span></li><li><span class="dur">ca 3 min omväg</span></li><li>ca 12:43</li></ul>
 <details><summary>Varför den passar</summary><p>100 % matchning för er familj, eftersom den passar 0-2 år och 3-5 år och ålderspassningen räknas ut från lekutrustningen (lekstuga, gunga), den är inte angiven på platsen (säkerhet: låg).</p></details>
 <p class="source">OpenStreetMap</p>
 </article>
@@ -435,7 +436,7 @@ details p { margin: 0 0 var(--space-2); font-size: 14px; line-height: 20px; }
 <div class="card-head"><span class="pin-badge">4</span><h3>Lekplats, Villastaden</h3></div>
 <p class="derived">Namnet är härlett från omgivningen</p>
 <p class="match"><span class="badge">100 % matchning</span></p>
-<ul class="facts"><li>4 tim 29 min från start</li><li>ca 2 min omväg</li><li>ca 13:29</li></ul>
+<ul class="facts"><li><span class="dur">4 tim 29 min från start</span></li><li><span class="dur">ca 2 min omväg</span></li><li>ca 13:29</li></ul>
 <details><summary>Varför den passar</summary><p>100 % matchning för er familj, eftersom den passar 0-2 år och 3-5 år och ålderspassningen räknas ut från lekutrustningen (korggunga, gungbräda, gunga), den är inte angiven på platsen (säkerhet: låg).</p></details>
 <p class="source">OpenStreetMap</p>
 </article>
@@ -449,7 +450,7 @@ details p { margin: 0 0 var(--space-2); font-size: 14px; line-height: 20px; }
 <div class="screen sheet-screen">
 <div class="top">
 <div class="top-row">
-<p class="trip-sum">Stockholm → Göteborg · 0-2, 3-5 · 1 tim 30 min</p>
+<p class="trip-sum">Stockholm → Göteborg · 0-2, 3-5 · <span class="dur">1 tim 30 min</span></p>
 <button type="button" class="btn-link">Ändra</button>
 </div>
 </div>
@@ -474,7 +475,7 @@ details p { margin: 0 0 var(--space-2); font-size: 14px; line-height: 20px; }
 <p class="match"><span class="badge">100 % matchning</span></p>
 <p class="reason">100 % matchning för er familj, eftersom den passar 0-2 år och 3-5 år och ålderspassningen räknas ut från lekutrustningen (lekstuga, gunga), den är inte angiven på platsen (säkerhet: låg).</p>
 <ul class="facts-grid">
-<li><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20 V12 C4 8 6 6 10 6 H20 M16 2 L20 6 L16 10"/></svg><span class="fact"><span class="value">ca 3 min omväg</span></span></li>
+<li><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20 V12 C4 8 6 6 10 6 H20 M16 2 L20 6 L16 10"/></svg><span class="fact"><span class="dur">ca 3 min omväg</span></span></li>
 <li><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 C18 2 22 6 22 12 C22 18 18 22 12 22 C6 22 2 18 2 12 C2 6 6 2 12 2 Z M12 6 V12 L16 14"/></svg><span class="fact"><span class="label">Vanlig tid</span><span class="value">okänt</span></span></li>
 <li><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 C13 3 14 4 14 5 C14 6 13 7 12 7 C11 7 10 6 10 5 C10 4 11 3 12 3 Z M6 11 H18 M12 7 V15 M8 22 L12 15 L16 22"/></svg><span class="fact"><span class="label">Ålderspassning</span><span class="value">0-2 år, 3-5 år</span><span class="note">uträknat från lekutrustning, säkerhet: låg</span></span></li>
 <li><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 2 H20 V22 H4 Z M12 5 C13 5 14 6 14 7 C14 8 13 9 12 9 C11 9 10 8 10 7 C10 6 11 5 12 5 Z M9 22 V13 C9 11 15 11 15 13 V22"/></svg><span class="fact"><span class="label">Toalett</span><span class="value">okänt</span></span></li>
@@ -485,7 +486,7 @@ details p { margin: 0 0 var(--space-2); font-size: 14px; line-height: 20px; }
 </ul>
 <p class="source">OpenStreetMap</p>
 <div class="actions">
-<button type="button" class="btn btn-primary btn-full">Lägg till i resan</button>
+<button type="button" class="btn btn-primary btn-full">Stanna här i stället</button>
 <div class="map-links">
 <button type="button" class="btn btn-secondary">Öppna i Google Maps</button>
 <button type="button" class="btn btn-secondary">Öppna i Apple Maps</button>
@@ -502,7 +503,7 @@ details p { margin: 0 0 var(--space-2); font-size: 14px; line-height: 20px; }
 <div class="screen">
 <div class="top">
 <div class="top-row">
-<p class="trip-sum">Stockholm → Göteborg · 0-2, 3-5 · 1 tim 30 min</p>
+<p class="trip-sum">Stockholm → Göteborg · 0-2, 3-5 · <span class="dur">1 tim 30 min</span></p>
 <button type="button" class="btn-link">Ändra</button>
 </div>
 </div>
@@ -517,15 +518,15 @@ details p { margin: 0 0 var(--space-2); font-size: 14px; line-height: 20px; }
 <text class="city" x="320" y="24" text-anchor="end">Stockholm</text>
 <text class="city" x="8" y="258">Göteborg</text>
 </svg>
-<figcaption><span>Illustrativ karta, inte skalenlig</span><span>Hela resan 5 tim 41 min</span></figcaption>
+<figcaption><span>Illustrativ karta, inte skalenlig</span><span class="dur">Hela resan 5 tim 41 min</span></figcaption>
 </figure>
 <div class="list">
 <article class="card is-added">
 <div class="card-head"><span class="pin-badge">3</span><h3>Lekplats, Öxnehaga</h3></div>
 <p class="derived">Namnet är härlett från omgivningen</p>
 <p class="match"><span class="badge">100 % matchning</span></p>
-<ul class="facts"><li>3 tim 43 min från start</li><li>ca 3 min omväg</li><li>ca 12:43</li></ul>
-<p class="added">Tillagd i resan</p>
+<ul class="facts"><li><span class="dur">3 tim 43 min från start</span></li><li><span class="dur">ca 3 min omväg</span></li><li>ca 12:43</li></ul>
+<p class="added">I resan</p>
 <p class="source">OpenStreetMap</p>
 </article>
 <div class="trip-list">
@@ -541,7 +542,7 @@ details p { margin: 0 0 var(--space-2); font-size: 14px; line-height: 20px; }
 <div class="screen">
 <div class="top">
 <div class="top-row">
-<p class="trip-sum">Stockholm → Göteborg · 0-2, 3-5 · 1 tim 30 min</p>
+<p class="trip-sum">Stockholm → Göteborg · 0-2, 3-5 · <span class="dur">1 tim 30 min</span></p>
 <button type="button" class="btn-link">Ändra</button>
 </div>
 </div>
@@ -555,7 +556,7 @@ details p { margin: 0 0 var(--space-2); font-size: 14px; line-height: 20px; }
 <text class="city" x="320" y="24" text-anchor="end">Stockholm</text>
 <text class="city" x="8" y="258">Göteborg</text>
 </svg>
-<figcaption><span>Illustrativ karta, inte skalenlig</span><span>Hela resan 5 tim 41 min</span></figcaption>
+<figcaption><span>Illustrativ karta, inte skalenlig</span><span class="dur">Hela resan 5 tim 41 min</span></figcaption>
 </figure>
 <div class="list">
 <p class="mark">Exempel</p>
@@ -563,14 +564,14 @@ details p { margin: 0 0 var(--space-2); font-size: 14px; line-height: 20px; }
 <article class="card">
 <div class="card-head"><span class="pin-badge">1</span><h3>Spöklekplatsen</h3></div>
 <p class="match"><span class="badge">74 % matchning</span></p>
-<ul class="facts"><li>1 tim 18 min från start</li><li>ca 2 min omväg</li><li>ca 10:18</li></ul>
+<ul class="facts"><li><span class="dur">1 tim 18 min från start</span></li><li><span class="dur">ca 2 min omväg</span></li><li>ca 10:18</li></ul>
 <details><summary>Varför den passar</summary><p>74 % matchning för er familj, eftersom ålderspassningen är okänd: ingen lekutrustning är angiven, plus 5 för en allmän lekplats.</p></details>
 <p class="source">OpenStreetMap</p>
 </article>
 <article class="card">
 <div class="card-head"><span class="pin-badge">2</span><h3>Slomarps stadsdelslekplats</h3></div>
 <p class="match"><span class="badge">74 % matchning</span></p>
-<ul class="facts"><li>2 tim 46 min från start</li><li>ca 1 min omväg</li><li>ca 11:46</li></ul>
+<ul class="facts"><li><span class="dur">2 tim 46 min från start</span></li><li><span class="dur">ca 1 min omväg</span></li><li>ca 11:46</li></ul>
 <details><summary>Varför den passar</summary><p>74 % matchning för er familj, eftersom ålderspassningen är okänd: ingen lekutrustning är angiven, plus 5 för en allmän lekplats.</p></details>
 <p class="source">OpenStreetMap</p>
 </article>
@@ -587,7 +588,7 @@ details p { margin: 0 0 var(--space-2); font-size: 14px; line-height: 20px; }
 <div class="screen">
 <div class="top">
 <div class="top-row">
-<p class="trip-sum">Stockholm → Göteborg · 0-2, 3-5 · 1 tim 30 min</p>
+<p class="trip-sum">Stockholm → Göteborg · 0-2, 3-5 · <span class="dur">1 tim 30 min</span></p>
 <button type="button" class="btn-link">Ändra</button>
 </div>
 </div>
@@ -602,15 +603,15 @@ details p { margin: 0 0 var(--space-2); font-size: 14px; line-height: 20px; }
 <text class="city" x="320" y="24" text-anchor="end">Stockholm</text>
 <text class="city" x="8" y="258">Göteborg</text>
 </svg>
-<figcaption><span>Illustrativ karta, inte skalenlig</span><span>Hela resan 5 tim 41 min</span></figcaption>
+<figcaption><span>Illustrativ karta, inte skalenlig</span><span class="dur">Hela resan 5 tim 41 min</span></figcaption>
 </figure>
 <div class="list">
-<p class="mark">Exempelposition: 1 tim 10 min in på resan</p>
+<p class="mark"><span class="dur">Exempelposition: 1 tim 10 min in på resan</span></p>
 <h3 class="list-title">Pausstopp nära dig</h3>
 <article class="card">
 <div class="card-head"><span class="pin-badge">1</span><h3>Spöklekplatsen</h3></div>
 <p class="match"><span class="badge">74 % matchning</span></p>
-<ul class="facts"><li>om ca 8 min</li><li>ca 2 min omväg</li></ul>
+<ul class="facts"><li><span class="dur">om ca 8 min</span></li><li><span class="dur">ca 2 min omväg</span></li></ul>
 <p class="source">OpenStreetMap</p>
 </article>
 </div>

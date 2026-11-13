@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Roadpal prototype: Patience range / Roadpal-prototyp: Tålamodssträckan</title>
+<style>
+:root { --background:#FFF9F0; --surface:#FFFFFF; --text:#1F2933; --text-muted:#52606D; --primary:#1E6F5C; --on-primary:#FFFFFF; --accent:#F4A340; --border:#D9D2C5; --on-accent:#1F2933; }
+@media (prefers-color-scheme: dark) { :root { --background:#14181B; --surface:#1E2429; --text:#F2F4F5; --text-muted:#B4BDC4; --primary:#5CC8A8; --on-primary:#0B1F19; --accent:#F4B860; --border:#3A444B; --on-accent:#14181B; } }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--background); color:var(--text); font:16px/24px system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+main.prototype { max-width:1280px; margin:auto; padding:16px; }
+header { padding:16px 0 24px; border-bottom:1px solid var(--border); }
+h1 { font-size:24px; line-height:32px; margin:0; } h1 span { display:block; } h2 { font-size:20px; line-height:28px; margin:0 0 12px; }
+p { margin:4px 0; } small,.small { font-size:12px; line-height:16px; color:var(--text-muted); }
+section { padding:24px 0; border-bottom:1px solid var(--border); }
+.frame { width:360px; max-width:100%; height:740px; position:relative; isolation:isolate; border:1px solid var(--border); background:var(--surface); overflow:hidden; }
+.map { position:absolute; inset:0; } .map svg { width:100%; height:100%; }
+.land { fill:var(--background); stroke:var(--border); stroke-width:2; } .road { fill:none; stroke:var(--border); stroke-width:2; }
+.route { fill:none; stroke:var(--primary); stroke-width:4; stroke-linecap:round; stroke-linejoin:round; }
+.pin circle { fill:var(--primary); stroke:var(--primary); stroke-width:2; } .pin text { fill:var(--on-primary); text-anchor:middle; dominant-baseline:central; font-size:14px; font-weight:700; }
+.outline circle { fill:var(--surface); } .outline text { fill:var(--primary); }
+.map-label { position:absolute; top:80px; right:12px; padding:4px 8px; background:var(--surface); border:1px solid var(--border); border-radius:12px; font-size:12px; line-height:16px; }
+.city { position:absolute; padding:4px 8px; background:var(--surface); font-size:14px; font-weight:700; border-radius:12px; }
+.stockholm { top:34%; right:12px; } .goteborg { top:57%; left:12px; }
+.controls { position:absolute; inset:16px 12px auto; display:flex; justify-content:space-between; gap:8px; }
+button,input { font:inherit; } button { min-width:48px; min-height:48px; padding:8px 12px; border:1px solid var(--primary); border-radius:12px; color:var(--primary); background:var(--surface); font-weight:700; cursor:pointer; }
+button:focus-visible,input:focus-visible { outline:3px solid var(--primary); outline-offset:2px; }
+button svg { width:24px; height:24px; flex:none; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.icon-button { display:inline-flex; align-items:center; justify-content:center; gap:8px; }
+.pause { position:absolute; right:12px; top:116px; }
+.sheet { position:absolute; bottom:0; left:0; right:0; padding:8px 16px 16px; background:var(--background); border-top:1px solid var(--border); border-radius:12px 12px 0 0; max-height:calc(100% - 184px); overflow-y:auto; }
+.handle { width:40px; height:4px; border-radius:12px; background:var(--border); margin:0 auto 12px; }
+.search .sheet { max-height:calc(100% - 184px); } .options .sheet { max-height:calc(100% - 184px); }
+.sheet h3 { font-size:24px; line-height:32px; margin:0 0 8px; }
+.chips { display:flex; flex-wrap:wrap; gap:8px; margin:8px 0; } .chip { border-radius:12px; min-width:64px; } .chip[aria-pressed=true] { background:var(--primary); color:var(--on-primary); }
+.primary { width:100%; background:var(--primary); color:var(--on-primary); } .wide { width:100%; margin-top:8px; }
+label.field { display:block; margin:8px 0; font-size:14px; line-height:20px; } .field input { display:block; width:100%; min-height:48px; padding:8px 12px; border:1px solid var(--border); border-radius:12px; background:var(--surface); color:var(--text); }
+.actions { display:flex; gap:8px; margin-top:8px; } .actions .primary { flex:1; }
+.strip { margin:12px 0 8px; } .strip-clocks { display:flex; justify-content:space-between; font-size:14px; line-height:20px; font-weight:700; font-variant-numeric:tabular-nums; }
+.strip-nodes { isolation:isolate; position:relative; display:flex; justify-content:space-between; align-items:center; margin:8px 0; } .strip-nodes:before { content:""; position:absolute; left:0; right:0; height:4px; background:var(--primary); z-index:-1; }
+.node { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; flex:none; border:2px solid var(--primary); border-radius:50%; color:var(--on-primary); background:var(--primary); font-size:14px; font-weight:700; } .departure { width:12px; height:12px; }
+.stop { border-top:1px solid var(--border); padding:8px 0; min-width:0; } .name { font-weight:700; overflow-wrap:anywhere; } .pill { display:table; margin:4px 0 4px auto; padding:0 8px; border-radius:12px; background:var(--accent); color:var(--on-accent); font-size:12px; line-height:20px; font-weight:700; white-space:nowrap; }
+.timeline { list-style:none; margin:8px 0; padding:0; } .timeline li { display:grid; grid-template-columns:64px 28px minmax(0,1fr); gap:8px; position:relative; }
+.clock { font-size:20px; line-height:28px; font-weight:700; font-variant-numeric:tabular-nums; padding-top:8px; } .spine { isolation:isolate; position:relative; padding-top:8px; } .spine:before { content:""; position:absolute; top:8px; bottom:-8px; width:4px; left:12px; background:var(--primary); z-index:-1; } .timeline li:last-child .spine:before { display:none; }
+.radio { display:flex; align-items:center; gap:8px; min-height:48px; padding:4px 0; border-top:1px solid var(--border); font-size:14px; line-height:20px; } input[type=radio] { width:20px; height:20px; flex:none; accent-color:var(--primary); }
+@media(min-width:800px) { .frame { width:100%; } .sheet { width:400px; right:auto; top:0; max-height:100%; border-radius:0; border-right:1px solid var(--border); display:flex; flex-direction:column; justify-content:flex-end; } .search .sheet,.options .sheet { max-height:100%; justify-content:flex-start; padding-top:24px; } .plan .sheet { justify-content:center; } .map { left:400px; } .controls { left:416px; } .pause { top:116px; } .stockholm { right:24px; } }
+/* Keep the raised sheet's actions visible while leaving the map controls above it. */
+.search .sheet,.options .sheet { max-height:calc(100% - 136px); }
+.search .pause,.options .pause { top:80px; }
+.search .field { margin:4px 0; }
+.search h3,.options h3 { font-size:20px; line-height:28px; margin-bottom:4px; }
+.search .choices { display:flex; align-items:center; gap:8px; margin-top:8px; }
+.search .choices > * { flex:1; min-width:0; margin:0; }
+.options .stop .pill { float:right; margin:4px 0 0 4px; }
+.options .sheet { padding-bottom:8px; }
+@media(min-width:800px) { .search .sheet,.options .sheet { max-height:100%; } }
+/* One fixed scale: 90 driving minutes. Muted track contrasts with cream in both themes. */
+.leg { padding:8px 0; border-top:1px solid var(--border); }
+.range-line { display:flex; align-items:center; gap:12px; }
+.track { width:108px; height:6px; flex:none; background:var(--text-muted); position:relative; margin-right:68px; }
+.fill { display:block; height:6px; background:var(--primary); width:var(--drive); }
+.overrun .fill { background:none; border-top:6px dashed var(--primary); }
+.range-line .duration { font-size:14px; line-height:20px; }
+.stop-row { border-top:1px solid var(--border); padding:8px 0; display:grid; grid-template-columns:76px minmax(0,1fr); gap:8px; }
+.stop-row .clock { padding:0; font-size:16px; line-height:24px; }
+.clock small { display:block; font-size:12px; font-weight:400; }
+.stop-row .pill { float:right; margin:4px 0 4px 8px; }
+.stop-row .radio { clear:both; }
+.plan .sheet,.skipped .sheet { height:calc(100% - 184px); max-height:calc(100% - 184px); }
+.sheet-footer { position:sticky; bottom:-16px; padding:8px 0; background:var(--background); border-top:1px solid var(--border); }
+.summary { font-size:16px; line-height:24px; }
+@media(min-width:800px) { .plan .sheet,.skipped .sheet { height:100%; max-height:100%; justify-content:flex-start; } }
+/* Guidance and arrival allow wrapped labels, including longer Swedish text. */
+.guided .map,.arrive .map { left:0; }
+.turn-banner { position:absolute; top:12px; left:12px; right:12px; max-width:376px; padding:16px; border:1px solid var(--border); border-radius:12px; background:var(--background); }
+.turn-banner strong { display:block; font-size:24px; line-height:32px; overflow-wrap:anywhere; }
+.guidance { position:absolute; bottom:0; left:0; right:0; max-width:400px; max-height:calc(100% - 180px); overflow-y:auto; padding:16px; background:var(--background); border-top:1px solid var(--border); }
+.guidance h3 { font-size:24px; line-height:32px; margin:0 0 8px; overflow-wrap:anywhere; }
+.guidance .track { margin-right:0; }
+.guidance .duration { min-width:0; overflow-wrap:anywhere; }
+.guidance .pause { position:static; width:100%; margin:12px 0 8px; }
+.arrive .controls { left:12px; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+.arrive .controls button { min-width:48px; overflow-wrap:anywhere; }
+.arrive .pause { top:116px; left:12px; right:auto; max-width:calc(100% - 24px); }
+.arrive .sheet { top:auto; bottom:0; max-height:calc(100% - 184px); justify-content:flex-start; }
+.nearby { padding-left:24px; margin:8px 0 16px; }
+.nearby li { padding:8px 0; overflow-wrap:anywhere; }
+.arrive .primary { white-space:normal; overflow-wrap:anywhere; }
+/* Menu and exploration share the map controls and allow Swedish labels to wrap. */
+.menu-open .map { left:0; }
+.menu-open .controls { left:12px; }
+.menu-panel { position:absolute; top:116px; left:12px; width:calc(100% - 24px); max-width:376px; max-height:calc(100% - 132px); overflow-y:auto; padding:16px; background:var(--background); border:1px solid var(--border); border-radius:12px; }
+.menu-list { list-style:none; margin:0 0 12px; padding:0; }
+.menu-list li { border-bottom:1px solid var(--border); }
+.menu-entry { width:100%; min-height:48px; justify-content:flex-start; padding:12px 8px; border:0; border-radius:0; background:var(--background); color:var(--primary); text-align:left; overflow-wrap:anywhere; }
+.menu-entry svg { width:24px; height:24px; flex:none; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.language-row { display:flex; flex-wrap:wrap; gap:8px; padding:0 8px 12px; }
+.language-row button { flex:1; }
+.language-row [aria-pressed=true] { background:var(--primary); color:var(--on-primary); }
+.explore .controls button { overflow-wrap:anywhere; }
+.explore .sheet { justify-content:flex-start; }
+.explore-summary h3 { font-size:20px; line-height:28px; overflow-wrap:anywhere; }
+.example-places { padding:12px 0; }
+.zoom-state { padding-top:12px; border-top:1px solid var(--border); }
+.zoom-guidance { display:flex; align-items:center; gap:12px; }
+.zoom-guidance > p { flex:1; min-width:0; overflow-wrap:anywhere; }
+.explore .map-label { max-width:calc(100% - 24px); }
+</style>
+</head>
+<body>
+<main class="prototype">
+<svg aria-hidden="true" width="0" height="0" style="position:absolute;overflow:hidden"><symbol id="sweden-map" viewBox="0 0 360 740"><path class="land" d="M234 60 L268 92 258 150 287 177 261 232 274 272 246 300 222 340 185 357 163 399 132 438 106 465 98 508 77 530 57 493 72 450 56 414 89 366 106 312 143 271 149 211 180 176 194 119 Z"/><path class="road" d="M234 100 L200 235 244 275 180 320 143 390 80 469 M95 380 L200 360 258 270"/></symbol></svg>
+<header><h1>Roadpal prototype: Patience range<span lang="sv">Roadpal-prototyp: Tålamodssträckan</span></h1><p>Stockholm → Göteborg · <span lang="en">Six static states</span> / <span lang="sv">Sex statiska lägen</span></p></header>
+<section lang="en" data-section="s1-opening">
+<h2>01 / Opening</h2>
+<div class="frame opening"><div class="map"><svg viewBox="0 0 360 740" aria-hidden="true"><use href="#sweden-map"/></svg><span class="map-label">Illustrative map</span><span class="city stockholm">Stockholm</span><span class="city goteborg">Göteborg</span></div>
+<div class="controls"><button type="button" class="icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6 H20 M4 12 H20 M4 18 H20"/></svg>Menu</button><button type="button" class="icon-button" title="Your location centres this map."><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 V6 M12 18 V21 M3 12 H6 M18 12 H21 M18 12 A6 6 0 1 1 6 12 A6 6 0 1 1 18 12"/></svg>Where am I</button></div>
+<button type="button" class="pause icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8 H17 V14 A4 4 0 0 1 13 18 H8 A4 4 0 0 1 4 14 Z M17 8 H19 A3 3 0 0 1 19 14 H17 M3 21 H20 M8 3 V5 M13 3 V5"/></svg>We need a break NOW</button>
+<div class="sheet"><div class="handle"></div>
+<h3>Where to?</h3>
+<p class="small">Children’s ages</p><div class="chips"><button type="button" class="chip" aria-pressed="true">0-2</button><button type="button" class="chip" aria-pressed="true">3-5</button></div>
+<button type="button" class="primary wide">Plan the trip</button>
+</div></div>
+</section>
+<section lang="sv" data-section="s1-opening">
+<h2>01 / Öppning</h2>
+<div class="frame opening"><div class="map"><svg viewBox="0 0 360 740" aria-hidden="true"><use href="#sweden-map"/></svg><span class="map-label">Illustrativ karta</span><span class="city stockholm">Stockholm</span><span class="city goteborg">Göteborg</span></div>
+<div class="controls"><button type="button" class="icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6 H20 M4 12 H20 M4 18 H20"/></svg>Meny</button><button type="button" class="icon-button" title="Din position centrerar kartan."><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 V6 M12 18 V21 M3 12 H6 M18 12 H21 M18 12 A6 6 0 1 1 6 12 A6 6 0 1 1 18 12"/></svg>Var är jag</button></div>
+<button type="button" class="pause icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8 H17 V14 A4 4 0 0 1 13 18 H8 A4 4 0 0 1 4 14 Z M17 8 H19 A3 3 0 0 1 19 14 H17 M3 21 H20 M8 3 V5 M13 3 V5"/></svg>Vi behöver en paus NU</button>
+<div class="sheet"><div class="handle"></div>
+<h3>Vart vill ni?</h3>
+<p class="small">Barnens åldrar</p><div class="chips"><button type="button" class="chip" aria-pressed="true">0-2</button><button type="button" class="chip" aria-pressed="true">3-5</button></div>
+<button type="button" class="primary wide">Planera resan</button>
+</div></div>
+</section>
+<section lang="en" data-section="s2-search">
+<h2>02 / Search</h2>
+<div class="frame search"><div class="map"><svg viewBox="0 0 360 740" aria-hidden="true"><use href="#sweden-map"/></svg><span class="map-label">Illustrative map</span><span class="city stockholm">Stockholm</span><span class="city goteborg">Göteborg</span></div>
+<div class="controls"><button type="button" class="icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6 H20 M4 12 H20 M4 18 H20"/></svg>Menu</button><button type="button" class="icon-button" title="Your location centres this map."><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 V6 M12 18 V21 M3 12 H6 M18 12 H21 M18 12 A6 6 0 1 1 6 12 A6 6 0 1 1 18 12"/></svg>Where am I</button></div>
+<button type="button" class="pause icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8 H17 V14 A4 4 0 0 1 13 18 H8 A4 4 0 0 1 4 14 Z M17 8 H19 A3 3 0 0 1 19 14 H17 M3 21 H20 M8 3 V5 M13 3 V5"/></svg>We need a break NOW</button>
+<div class="sheet"><div class="handle"></div>
+<h3>Where to?</h3>
+<label class="field">Destination<input value="Göteborg" readonly></label><label class="field">From<input value="Your position" readonly></label>
+<p class="small">Children’s ages</p><div class="chips"><button type="button" class="chip" aria-pressed="true">0-2</button><button type="button" class="chip" aria-pressed="true">3-5</button></div>
+<div class="choices"><p>Longest drive: 1 h 30 min</p><button type="button">More options</button></div>
+<p class="small">When you plan, location finds the start from Your position.</p>
+<button type="button" class="primary wide">Plan the trip</button>
+<div class="choices"><button type="button">Build the trip myself</button><button type="button">Try the demo</button></div>
+</div></div>
+</section>
+<section lang="sv" data-section="s2-search">
+<h2>02 / Sökning</h2>
+<div class="frame search"><div class="map"><svg viewBox="0 0 360 740" aria-hidden="true"><use href="#sweden-map"/></svg><span class="map-label">Illustrativ karta</span><span class="city stockholm">Stockholm</span><span class="city goteborg">Göteborg</span></div>
+<div class="controls"><button type="button" class="icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6 H20 M4 12 H20 M4 18 H20"/></svg>Meny</button><button type="button" class="icon-button" title="Din position centrerar kartan."><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 V6 M12 18 V21 M3 12 H6 M18 12 H21 M18 12 A6 6 0 1 1 6 12 A6 6 0 1 1 18 12"/></svg>Var är jag</button></div>
+<button type="button" class="pause icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8 H17 V14 A4 4 0 0 1 13 18 H8 A4 4 0 0 1 4 14 Z M17 8 H19 A3 3 0 0 1 19 14 H17 M3 21 H20 M8 3 V5 M13 3 V5"/></svg>Vi behöver en paus NU</button>
+<div class="sheet"><div class="handle"></div>
+<h3>Vart vill ni?</h3>
+<label class="field">Resmål<input value="Göteborg" readonly></label><label class="field">Från<input value="Din position" readonly></label>
+<p class="small">Barnens åldrar</p><div class="chips"><button type="button" class="chip" aria-pressed="true">0-2</button><button type="button" class="chip" aria-pressed="true">3-5</button></div>
+<div class="choices"><p>Längsta körtid: 1 tim 30 min</p><button type="button">Fler alternativ</button></div>
+<p class="small">När du planerar används din position som resans start.</p>
+<button type="button" class="primary wide">Planera resan</button>
+<div class="choices"><button type="button">Bygg resan själv</button><button type="button">Prova demon</button></div>
+</div></div>
+</section>
+<section lang="en" data-section="s3-plan">
+<h2>03 / The plan</h2>
+<div class="frame plan"><div class="map"><svg viewBox="0 0 360 740" aria-hidden="true"><use href="#sweden-map"/><path class="route" d="M244 275 L211 299 170 338 120 375 82 410 67 448"/><g class="pin" transform="translate(211 299)"><circle r="14"/><text>1</text></g><g class="pin" transform="translate(170 338)"><circle r="14"/><text>2</text></g><g class="pin" transform="translate(120 375)"><circle r="14"/><text>3</text></g><g class="pin" transform="translate(82 410)"><circle r="14"/><text>4</text></g><g class="pin outline" transform="translate(245 316)"><circle r="14"/><text>1</text></g></svg><span class="map-label">Illustrative map</span><span class="city stockholm">Stockholm</span><span class="city goteborg">Göteborg</span></div>
+<div class="controls"><button type="button" class="icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6 H20 M4 12 H20 M4 18 H20"/></svg>Menu</button><button type="button" class="icon-button" title="Your location centres this map."><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 V6 M12 18 V21 M3 12 H6 M18 12 H21 M18 12 A6 6 0 1 1 6 12 A6 6 0 1 1 18 12"/></svg>Where am I</button></div>
+<button type="button" class="pause icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8 H17 V14 A4 4 0 0 1 13 18 H8 A4 4 0 0 1 4 14 Z M17 8 H19 A3 3 0 0 1 19 14 H17 M3 21 H20 M8 3 V5 M13 3 V5"/></svg>We need a break NOW</button>
+<div class="sheet"><div class="handle"></div><h3 class="summary">Stockholm → Göteborg · 0-2, 3-5 · longest drive 1 h 30 min</h3><button type="button">Edit</button><p class="small">Demo · Example departure: 09:00</p><p class="small">Driving time only. Stops add to it.</p>
+<div class="leg" data-minutes="78"><p>Drive 1 h 18 min</p><div class="range-line"><span class="track"><span class="fill" style="--drive:86.667%"></span></span><span class="duration">1 h 18 min</span></div></div>
+<div class="stop-row"><span class="clock"><small>about</small>10:18</span><div><div class="name">1 · Spöklekplatsen</div><span class="pill">74 %</span><p class="small">Typical time: 30 min</p><p class="small">About 2 min detour</p><label class="radio"><input type="radio" name="pick-en" checked>Spöklekplatsen</label><label class="radio"><input type="radio" name="pick-en">Example: another playground · about 4 min detour</label></div></div>
+<div class="leg" data-minutes="88"><p>Drive 1 h 28 min</p><div class="range-line"><span class="track"><span class="fill" style="--drive:97.778%"></span></span><span class="duration">1 h 28 min</span></div></div>
+<div class="stop-row"><span class="clock"><small>about</small>11:46</span><div><div class="name">2 · Slomarps stadsdelslekplats</div><span class="pill">74 %</span><p class="small">Typical time: 30 min</p><p class="small">About 1 min detour</p><button type="button">Skip break</button></div></div>
+<div class="leg" data-minutes="57"><p>Drive 57 min</p><div class="range-line"><span class="track"><span class="fill" style="--drive:63.333%"></span></span><span class="duration">57 min</span></div></div>
+<div class="stop-row"><span class="clock"><small>about</small>12:43</span><div><div class="name">3 · Playground, Öxnehaga</div><span class="pill">100 %</span><p class="small">Typical time: 30 min</p><p class="small">About 3 min detour</p></div></div>
+<div class="leg" data-minutes="46"><p>Drive 46 min</p><div class="range-line"><span class="track"><span class="fill" style="--drive:51.111%"></span></span><span class="duration">46 min</span></div></div>
+<div class="stop-row"><span class="clock"><small>about</small>13:29</span><div><div class="name">4 · Playground, Villastaden</div><span class="pill">100 %</span><p class="small">Typical time: 30 min</p><p class="small">About 2 min detour</p></div></div>
+<div class="sheet-footer"><p class="small">At Start, location finds the first driving leg.</p><button type="button" class="primary icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12 H19 M13 6 L19 12 L13 18"/></svg>Start</button></div></div></div></section>
+<section lang="sv" data-section="s3-plan">
+<h2>03 / Resplanen</h2>
+<div class="frame plan"><div class="map"><svg viewBox="0 0 360 740" aria-hidden="true"><use href="#sweden-map"/><path class="route" d="M244 275 L211 299 170 338 120 375 82 410 67 448"/><g class="pin" transform="translate(211 299)"><circle r="14"/><text>1</text></g><g class="pin" transform="translate(170 338)"><circle r="14"/><text>2</text></g><g class="pin" transform="translate(120 375)"><circle r="14"/><text>3</text></g><g class="pin" transform="translate(82 410)"><circle r="14"/><text>4</text></g><g class="pin outline" transform="translate(245 316)"><circle r="14"/><text>1</text></g></svg><span class="map-label">Illustrativ karta</span><span class="city stockholm">Stockholm</span><span class="city goteborg">Göteborg</span></div>
+<div class="controls"><button type="button" class="icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6 H20 M4 12 H20 M4 18 H20"/></svg>Meny</button><button type="button" class="icon-button" title="Din position centrerar kartan."><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 V6 M12 18 V21 M3 12 H6 M18 12 H21 M18 12 A6 6 0 1 1 6 12 A6 6 0 1 1 18 12"/></svg>Var är jag</button></div>
+<button type="button" class="pause icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8 H17 V14 A4 4 0 0 1 13 18 H8 A4 4 0 0 1 4 14 Z M17 8 H19 A3 3 0 0 1 19 14 H17 M3 21 H20 M8 3 V5 M13 3 V5"/></svg>Vi behöver en paus NU</button>
+<div class="sheet"><div class="handle"></div><h3 class="summary">Stockholm → Göteborg · 0-2, 3-5 · längsta körtid 1 tim 30 min</h3><button type="button">Ändra</button><p class="small">Demo · Exempel på avresa: 09:00</p><p class="small">Bara körtid. Stopp tillkommer.</p>
+<div class="leg" data-minutes="78"><p>Kör 1 tim 18 min</p><div class="range-line"><span class="track"><span class="fill" style="--drive:86.667%"></span></span><span class="duration">1 tim 18 min</span></div></div>
+<div class="stop-row"><span class="clock"><small>ca</small>10:18</span><div><div class="name">1 · Spöklekplatsen</div><span class="pill">74 %</span><p class="small">Typisk tid: 30 min</p><p class="small">Ca 2 min omväg</p><label class="radio"><input type="radio" name="pick-sv" checked>Spöklekplatsen</label><label class="radio"><input type="radio" name="pick-sv">Exempel: en annan lekplats · ca 4 min omväg</label></div></div>
+<div class="leg" data-minutes="88"><p>Kör 1 tim 28 min</p><div class="range-line"><span class="track"><span class="fill" style="--drive:97.778%"></span></span><span class="duration">1 tim 28 min</span></div></div>
+<div class="stop-row"><span class="clock"><small>ca</small>11:46</span><div><div class="name">2 · Slomarps stadsdelslekplats</div><span class="pill">74 %</span><p class="small">Typisk tid: 30 min</p><p class="small">Ca 1 min omväg</p><button type="button">Hoppa över paus</button></div></div>
+<div class="leg" data-minutes="57"><p>Kör 57 min</p><div class="range-line"><span class="track"><span class="fill" style="--drive:63.333%"></span></span><span class="duration">57 min</span></div></div>
+<div class="stop-row"><span class="clock"><small>ca</small>12:43</span><div><div class="name">3 · Lekplats, Öxnehaga</div><span class="pill">100 %</span><p class="small">Typisk tid: 30 min</p><p class="small">Ca 3 min omväg</p></div></div>
+<div class="leg" data-minutes="46"><p>Kör 46 min</p><div class="range-line"><span class="track"><span class="fill" style="--drive:51.111%"></span></span><span class="duration">46 min</span></div></div>
+<div class="stop-row"><span class="clock"><small>ca</small>13:29</span><div><div class="name">4 · Lekplats, Villastaden</div><span class="pill">100 %</span><p class="small">Typisk tid: 30 min</p><p class="small">Ca 2 min omväg</p></div></div>
+<div class="sheet-footer"><p class="small">Vid Start används din position för resans första del.</p><button type="button" class="primary icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12 H19 M13 6 L19 12 L13 18"/></svg>Start</button></div></div></div></section>
+<section lang="en" data-section="s4-skipped">
+<h2>04 / Break 2 skipped</h2>
+<div class="frame skipped"><div class="map"><svg viewBox="0 0 360 740" aria-hidden="true"><use href="#sweden-map"/><path class="route" stroke-dasharray="8 4" d="M244 275 L211 299 170 338 120 375 82 410 67 448"/><g class="pin" transform="translate(211 299)"><circle r="14"/><text>1</text></g><g class="pin" transform="translate(120 375)"><circle r="14"/><text>3</text></g><g class="pin" transform="translate(82 410)"><circle r="14"/><text>4</text></g><g class="pin outline" transform="translate(245 316)"><circle r="14"/><text>1</text></g></svg><span class="map-label">Illustrative map</span><span class="city stockholm">Stockholm</span><span class="city goteborg">Göteborg</span></div>
+<div class="controls"><button type="button" class="icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6 H20 M4 12 H20 M4 18 H20"/></svg>Menu</button><button type="button" class="icon-button" title="Your location centres this map."><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 V6 M12 18 V21 M3 12 H6 M18 12 H21 M18 12 A6 6 0 1 1 6 12 A6 6 0 1 1 18 12"/></svg>Where am I</button></div>
+<button type="button" class="pause icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8 H17 V14 A4 4 0 0 1 13 18 H8 A4 4 0 0 1 4 14 Z M17 8 H19 A3 3 0 0 1 19 14 H17 M3 21 H20 M8 3 V5 M13 3 V5"/></svg>We need a break NOW</button>
+<div class="sheet"><div class="handle"></div><h3 class="summary">Stockholm → Göteborg · 0-2, 3-5 · longest drive 1 h 30 min</h3><button type="button">Edit</button><p class="small">Demo · Example departure: 09:00</p><p class="small">Driving time only. Stops add to it.</p>
+<div class="leg" data-minutes="78"><p>Drive 1 h 18 min</p><div class="range-line"><span class="track"><span class="fill" style="--drive:86.667%"></span></span><span class="duration">1 h 18 min</span></div></div>
+<div class="stop-row"><span class="clock"><small>about</small>10:18</span><div><div class="name">1 · Spöklekplatsen</div><span class="pill">74 %</span><p class="small">Typical time: 30 min</p><p class="small">About 2 min detour</p></div></div>
+<div class="leg overrun" data-minutes="145"><p>Drive 2 h 25 min</p><div class="range-line"><span class="track"><span class="fill" style="--drive:161.111%"></span></span><span class="duration">2 h 25 min</span></div><p class="small">Longer than your longest drive (1 h 30 min)</p><p>Break 2 skipped</p><button type="button">Undo</button></div>
+<div class="stop-row"><span class="clock"><small>about</small>12:43</span><div><div class="name">3 · Playground, Öxnehaga</div><span class="pill">100 %</span><p class="small">Typical time: 30 min</p><p class="small">About 3 min detour</p></div></div>
+<div class="leg" data-minutes="46"><p>Drive 46 min</p><div class="range-line"><span class="track"><span class="fill" style="--drive:51.111%"></span></span><span class="duration">46 min</span></div></div>
+<div class="stop-row"><span class="clock"><small>about</small>13:29</span><div><div class="name">4 · Playground, Villastaden</div><span class="pill">100 %</span><p class="small">Typical time: 30 min</p><p class="small">About 2 min detour</p></div></div>
+<div class="sheet-footer"><p class="small">At Start, location finds the first driving leg.</p><button type="button" class="primary icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12 H19 M13 6 L19 12 L13 18"/></svg>Start</button></div></div></div></section>
+<section lang="sv" data-section="s4-skipped">
+<h2>04 / Paus 2 överhoppad</h2>
+<div class="frame skipped"><div class="map"><svg viewBox="0 0 360 740" aria-hidden="true"><use href="#sweden-map"/><path class="route" stroke-dasharray="8 4" d="M244 275 L211 299 170 338 120 375 82 410 67 448"/><g class="pin" transform="translate(211 299)"><circle r="14"/><text>1</text></g><g class="pin" transform="translate(120 375)"><circle r="14"/><text>3</text></g><g class="pin" transform="translate(82 410)"><circle r="14"/><text>4</text></g><g class="pin outline" transform="translate(245 316)"><circle r="14"/><text>1</text></g></svg><span class="map-label">Illustrativ karta</span><span class="city stockholm">Stockholm</span><span class="city goteborg">Göteborg</span></div>
+<div class="controls"><button type="button" class="icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6 H20 M4 12 H20 M4 18 H20"/></svg>Meny</button><button type="button" class="icon-button" title="Din position centrerar kartan."><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 V6 M12 18 V21 M3 12 H6 M18 12 H21 M18 12 A6 6 0 1 1 6 12 A6 6 0 1 1 18 12"/></svg>Var är jag</button></div>
+<button type="button" class="pause icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8 H17 V14 A4 4 0 0 1 13 18 H8 A4 4 0 0 1 4 14 Z M17 8 H19 A3 3 0 0 1 19 14 H17 M3 21 H20 M8 3 V5 M13 3 V5"/></svg>Vi behöver en paus NU</button>
+<div class="sheet"><div class="handle"></div><h3 class="summary">Stockholm → Göteborg · 0-2, 3-5 · längsta körtid 1 tim 30 min</h3><button type="button">Ändra</button><p class="small">Demo · Exempel på avresa: 09:00</p><p class="small">Bara körtid. Stopp tillkommer.</p>
+<div class="leg" data-minutes="78"><p>Kör 1 tim 18 min</p><div class="range-line"><span class="track"><span class="fill" style="--drive:86.667%"></span></span><span class="duration">1 tim 18 min</span></div></div>
+<div class="stop-row"><span class="clock"><small>ca</small>10:18</span><div><div class="name">1 · Spöklekplatsen</div><span class="pill">74 %</span><p class="small">Typisk tid: 30 min</p><p class="small">Ca 2 min omväg</p></div></div>
+<div class="leg overrun" data-minutes="145"><p>Kör 2 tim 25 min</p><div class="range-line"><span class="track"><span class="fill" style="--drive:161.111%"></span></span><span class="duration">2 tim 25 min</span></div><p class="small">Längre än er längsta körtid (1 tim 30 min)</p><p>Paus 2 överhoppad</p><button type="button">Ångra</button></div>
+<div class="stop-row"><span class="clock"><small>ca</small>12:43</span><div><div class="name">3 · Lekplats, Öxnehaga</div><span class="pill">100 %</span><p class="small">Typisk tid: 30 min</p><p class="small">Ca 3 min omväg</p></div></div>
+<div class="leg" data-minutes="46"><p>Kör 46 min</p><div class="range-line"><span class="track"><span class="fill" style="--drive:51.111%"></span></span><span class="duration">46 min</span></div></div>
+<div class="stop-row"><span class="clock"><small>ca</small>13:29</span><div><div class="name">4 · Lekplats, Villastaden</div><span class="pill">100 %</span><p class="small">Typisk tid: 30 min</p><p class="small">Ca 2 min omväg</p></div></div>
+<div class="sheet-footer"><p class="small">Vid Start används din position för resans första del.</p><button type="button" class="primary icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12 H19 M13 6 L19 12 L13 18"/></svg>Start</button></div></div></div></section>
+<section lang="en" data-section="s5-guided">
+<h2>05 / Guided · moving</h2>
+<div class="frame guided"><div class="map"><svg viewBox="0 0 360 740" aria-hidden="true"><use href="#sweden-map"/><path class="route" d="M244 275 L211 299"/><g class="pin" transform="translate(211 299)"><circle r="14"/><text>1</text></g></svg></div>
+<div class="turn-banner"><p class="small">Example</p><strong>Turn right in 200 m</strong></div>
+<div class="guidance"><h3>Spöklekplatsen</h3>
+<div class="leg" data-minutes="32"><div class="range-line"><span class="track"><span class="fill" style="--drive:35.556%"></span></span><span class="duration">about 32 min left</span></div></div>
+<p class="small">Driving time only. Stops add to it.</p>
+<button type="button" class="pause icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8 H17 V14 A4 4 0 0 1 13 18 H8 A4 4 0 0 1 4 14 Z M17 8 H19 A3 3 0 0 1 19 14 H17 M3 21 H20 M8 3 V5 M13 3 V5"/></svg>We need a break NOW</button>
+<p>Roadpal guides only while it is open with the screen on.</p>
+</div></div>
+</section>
+<section lang="sv" data-section="s5-guided">
+<h2>05 / Guidning · under färd</h2>
+<div class="frame guided"><div class="map"><svg viewBox="0 0 360 740" aria-hidden="true"><use href="#sweden-map"/><path class="route" d="M244 275 L211 299"/><g class="pin" transform="translate(211 299)"><circle r="14"/><text>1</text></g></svg></div>
+<div class="turn-banner"><p class="small">Exempel</p><strong>Sväng höger om 200 m</strong></div>
+<div class="guidance"><h3>Spöklekplatsen</h3>
+<div class="leg" data-minutes="32"><div class="range-line"><span class="track"><span class="fill" style="--drive:35.556%"></span></span><span class="duration">ca 32 min kvar</span></div></div>
+<p class="small">Bara körtid. Stopp tillkommer.</p>
+<button type="button" class="pause icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8 H17 V14 A4 4 0 0 1 13 18 H8 A4 4 0 0 1 4 14 Z M17 8 H19 A3 3 0 0 1 19 14 H17 M3 21 H20 M8 3 V5 M13 3 V5"/></svg>Vi behöver en paus NU</button>
+<p>Roadpal guidar bara när det är öppet och skärmen är på.</p>
+</div></div>
+</section>
+<section lang="en" data-section="s6-arrive">
+<h2>06 / Arriving</h2>
+<div class="frame arrive"><div class="map"><svg viewBox="0 0 360 740" aria-hidden="true"><use href="#sweden-map"/><path class="route" d="M244 275 L211 299"/><g class="pin" transform="translate(211 299)"><circle r="14"/><text>1</text></g></svg></div>
+<div class="controls"><button type="button" class="icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6 H20 M4 12 H20 M4 18 H20"/></svg>Menu</button><button type="button" class="icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 V6 M12 18 V21 M3 12 H6 M18 12 H21 M18 12 A6 6 0 1 1 6 12 A6 6 0 1 1 18 12"/></svg>Where am I</button></div>
+<button type="button" class="pause icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8 H17 V14 A4 4 0 0 1 13 18 H8 A4 4 0 0 1 4 14 Z M17 8 H19 A3 3 0 0 1 19 14 H17 M3 21 H20 M8 3 V5 M13 3 V5"/></svg>We need a break NOW</button>
+<div class="sheet"><div class="handle"></div><h3>Spöklekplatsen</h3><span class="pill">74 %</span>
+<p>Suits 0-2 and 3-5: a playground with a sandpit and swings. Example reason.</p>
+<h4>Nearest here</h4><ul class="nearby"><li>Toilet · Example: 120 m</li><li>Changing table · Example: 150 m</li><li>Food · Example: 250 m</li></ul>
+<button type="button" class="primary">Continue to the next leg</button>
+</div></div>
+</section>
+<section lang="sv" data-section="s6-arrive">
+<h2>06 / Framme</h2>
+<div class="frame arrive"><div class="map"><svg viewBox="0 0 360 740" aria-hidden="true"><use href="#sweden-map"/><path class="route" d="M244 275 L211 299"/><g class="pin" transform="translate(211 299)"><circle r="14"/><text>1</text></g></svg></div>
+<div class="controls"><button type="button" class="icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6 H20 M4 12 H20 M4 18 H20"/></svg>Meny</button><button type="button" class="icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 V6 M12 18 V21 M3 12 H6 M18 12 H21 M18 12 A6 6 0 1 1 6 12 A6 6 0 1 1 18 12"/></svg>Var är jag</button></div>
+<button type="button" class="pause icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8 H17 V14 A4 4 0 0 1 13 18 H8 A4 4 0 0 1 4 14 Z M17 8 H19 A3 3 0 0 1 19 14 H17 M3 21 H20 M8 3 V5 M13 3 V5"/></svg>Vi behöver en paus NU</button>
+<div class="sheet"><div class="handle"></div><h3>Spöklekplatsen</h3><span class="pill">74 %</span>
+<p>Passar 0-2 och 3-5: en lekplats med sandlåda och gungor. Exempel på skäl.</p>
+<h4>Närmast här</h4><ul class="nearby"><li>Toalett · Exempel: 120 m</li><li>Skötbord · Exempel: 150 m</li><li>Mat · Exempel: 250 m</li></ul>
+<button type="button" class="primary">Fortsätt till nästa etapp</button>
+</div></div>
+</section>
+<section lang="en" data-section="s7-menu">
+<h2>07 / Menu open</h2>
+<div class="frame menu-open">
+<div class="map"><svg viewBox="0 0 360 740" aria-hidden="true"><use href="#sweden-map"/></svg><span class="map-label">Illustrative map</span></div>
+<div class="controls"><button type="button" class="icon-button" aria-expanded="true" aria-controls="menu-en" title="Close menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6 L18 18 M18 6 L6 18"/></svg>Menu</button></div>
+<nav class="menu-panel" id="menu-en" aria-label="Menu"><ul class="menu-list">
+<li><button type="button" class="menu-entry icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20 L3 11 Q0 4 7 4 Q10 4 12 7 Q14 4 17 4 Q24 4 21 11 Z"/></svg><span>Favourites</span></button></li>
+<li><button type="button" class="menu-entry icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21 Q3 12 5 7 Q7 1 13 3 Q22 4 19 12 Z M14 9 A2 2 0 1 1 10 9 A2 2 0 1 1 14 9"/></svg><span>What is nearby</span></button></li>
+<li><button type="button" class="menu-entry icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3 H19 V21 L12 17 L5 21 Z"/></svg><span>Saved trips</span></button></li>
+<li><div class="menu-entry icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5 H15 M9 3 V5 M5 8 Q8 14 15 17 M13 5 Q12 12 3 17 M15 21 L19 11 L23 21 M17 17 H21"/></svg><span>Language</span></div><div class="language-row"><button type="button" aria-pressed="true">English</button><button type="button" aria-pressed="false">Svenska</button></div></li>
+<li><button type="button" class="menu-entry icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 11 V17 M12 7 V7 M21 12 A9 9 0 1 1 3 12 A9 9 0 1 1 21 12"/></svg><span>About and data sources</span></button></li>
+</ul><p class="small">Kept in this browser. No account.</p></nav>
+</div>
+</section>
+<section lang="sv" data-section="s7-menu">
+<h2>07 / Öppen meny</h2>
+<div class="frame menu-open">
+<div class="map"><svg viewBox="0 0 360 740" aria-hidden="true"><use href="#sweden-map"/></svg><span class="map-label">Illustrativ karta</span></div>
+<div class="controls"><button type="button" class="icon-button" aria-expanded="true" aria-controls="menu-sv" title="Stäng menyn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6 L18 18 M18 6 L6 18"/></svg>Meny</button></div>
+<nav class="menu-panel" id="menu-sv" aria-label="Meny"><ul class="menu-list">
+<li><button type="button" class="menu-entry icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20 L3 11 Q0 4 7 4 Q10 4 12 7 Q14 4 17 4 Q24 4 21 11 Z"/></svg><span>Favoriter</span></button></li>
+<li><button type="button" class="menu-entry icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21 Q3 12 5 7 Q7 1 13 3 Q22 4 19 12 Z M14 9 A2 2 0 1 1 10 9 A2 2 0 1 1 14 9"/></svg><span>Det som finns i närheten</span></button></li>
+<li><button type="button" class="menu-entry icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3 H19 V21 L12 17 L5 21 Z"/></svg><span>Sparade resor</span></button></li>
+<li><div class="menu-entry icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5 H15 M9 3 V5 M5 8 Q8 14 15 17 M13 5 Q12 12 3 17 M15 21 L19 11 L23 21 M17 17 H21"/></svg><span>Språk</span></div><div class="language-row"><button type="button" aria-pressed="false">English</button><button type="button" aria-pressed="true">Svenska</button></div></li>
+<li><button type="button" class="menu-entry icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 11 V17 M12 7 V7 M21 12 A9 9 0 1 1 3 12 A9 9 0 1 1 21 12"/></svg><span>Om och datakällor</span></button></li>
+</ul><p class="small">Sparas i den här webbläsaren. Inget konto.</p></nav>
+</div>
+</section>
+<section lang="en" data-section="s8-explore">
+<h2>08 / Explore places</h2>
+<div class="frame explore">
+<div class="map"><svg viewBox="0 0 360 740" aria-hidden="true"><use href="#sweden-map"/><g class="pin outline" transform="translate(211 230)"><circle r="14"/><text>1</text></g><g class="pin outline" transform="translate(135 280)"><circle r="14"/><text>2</text></g><g class="pin outline" transform="translate(245 315)"><circle r="14"/><text>3</text></g></svg><span class="map-label">Illustrative map · Zoom 12 · Example</span></div>
+<div class="controls"><button type="button" class="icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6 H20 M4 12 H20 M4 18 H20"/></svg>Menu</button><button type="button" class="icon-button" title="Your location centres this map."><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 V6 M12 18 V21 M3 12 H6 M18 12 H21 M18 12 A6 6 0 1 1 6 12 A6 6 0 1 1 18 12"/></svg>Where am I</button></div>
+<button type="button" class="pause icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8 H17 V14 A4 4 0 0 1 13 18 H8 A4 4 0 0 1 4 14 Z M17 8 H19 A3 3 0 0 1 19 14 H17 M3 21 H20 M8 3 V5 M13 3 V5"/></svg>We need a break NOW</button>
+<div class="sheet"><div class="handle"></div>
+<div class="explore-summary"><h3>Places that suit your family in this view</h3><p class="small">Showing the 20 best matches first</p></div>
+<p class="small">Example · Ages 0-2 and 3-5</p>
+<p class="example-places small">Example: 1 Playground · 2 Park · 3 Picnic area</p>
+<div class="zoom-state"><p class="small">Zoom 10 · 0 pins below zoom 11</p><div class="zoom-guidance"><p>Zoom in to see places</p><p class="pin-cap small">Up to 20 pins, best match first</p></div></div>
+</div></div>
+</section>
+<section lang="sv" data-section="s8-explore">
+<h2>08 / Utforska platser</h2>
+<div class="frame explore">
+<div class="map"><svg viewBox="0 0 360 740" aria-hidden="true"><use href="#sweden-map"/><g class="pin outline" transform="translate(211 230)"><circle r="14"/><text>1</text></g><g class="pin outline" transform="translate(135 280)"><circle r="14"/><text>2</text></g><g class="pin outline" transform="translate(245 315)"><circle r="14"/><text>3</text></g></svg><span class="map-label">Illustrativ karta · Zoom 12 · Exempel</span></div>
+<div class="controls"><button type="button" class="icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6 H20 M4 12 H20 M4 18 H20"/></svg>Meny</button><button type="button" class="icon-button" title="Din position centrerar kartan."><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 V6 M12 18 V21 M3 12 H6 M18 12 H21 M18 12 A6 6 0 1 1 6 12 A6 6 0 1 1 18 12"/></svg>Var är jag</button></div>
+<button type="button" class="pause icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8 H17 V14 A4 4 0 0 1 13 18 H8 A4 4 0 0 1 4 14 Z M17 8 H19 A3 3 0 0 1 19 14 H17 M3 21 H20 M8 3 V5 M13 3 V5"/></svg>Vi behöver en paus NU</button>
+<div class="sheet"><div class="handle"></div>
+<div class="explore-summary"><h3>Platser som passar er familj i den här vyn</h3><p class="small">Visar de 20 bästa träffarna först</p></div>
+<p class="small">Exempel · Ålder 0-2 och 3-5</p>
+<p class="example-places small">Exempel: 1 Lekplats · 2 Park · 3 Picknickplats</p>
+<div class="zoom-state"><p class="small">Zoom 10 · 0 stift under zoom 11</p><div class="zoom-guidance"><p>Zooma in för att se platser</p><p class="pin-cap small">Högst 20 stift, bästa träff först</p></div></div>
+</div></div>
+</section>
+</main>
+</body>
+</html>
