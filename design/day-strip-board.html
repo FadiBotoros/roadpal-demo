@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<!--
+Simplicity pass — applies to the same six steps in both languages.
+Step 1: Left out menu, location control, urgent break button and age chips; kept map and destination entry.
+Step 2: Left out map controls, longest-drive settings, extra options, manual planning and demo choice; kept destination and ages.
+Step 3: Left out map controls, match scores, detours and secondary trip actions; kept the four breaks and arrival.
+Step 4: Left out the other three breaks, map controls and extra trip actions; kept the first break's reason and choice.
+Step 5: Left out menu, map controls, urgent break button and full stop list; kept next break, open-screen notice and arrival confirmation.
+Step 6: Left out map controls, match score and example facility distances; kept arrival, family reason and continue action.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Day strip · Dagremsan</title>
+<style>
+:root { --background:#FFF9F0; --surface:#FFFFFF; --text:#1F2933; --text-muted:#52606D; --primary:#1E6F5C; --on-primary:#FFFFFF; --accent:#F4A340; --border:#D9D2C5; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--background); color:var(--text); font:16px/1.45 system-ui,sans-serif; }
+main { max-width:1200px; margin:auto; padding:24px; }
+a { color:var(--primary); }
+nav { display:flex; gap:24px; margin-bottom:24px; }
+.language { margin-bottom:64px; }
+header { max-width:680px; margin-bottom:32px; }
+h1 { font-size:40px; line-height:1.1; margin:0 0 16px; }
+h2 { font-size:20px; margin:0 0 12px; }
+h3 { font-size:20px; margin:0 0 12px; }
+p { margin:0 0 16px; }
+.story { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px; }
+.step { margin:0; }
+.caption { min-height:64px; margin:0 0 12px; font-size:18px; font-weight:650; }
+.number { color:var(--primary); display:block; font-size:16px; }
+.phone { border:2px solid var(--text); border-radius:28px; padding:16px; min-height:536px; background:var(--surface); display:flex; flex-direction:column; gap:16px; overflow-wrap:anywhere; }
+.brand { font-weight:750; color:var(--primary); border-bottom:1px solid var(--border); padding-bottom:8px; }
+.small { font-size:14px; color:var(--text-muted); }
+.map { position:relative; height:220px; border-radius:16px; background:var(--background); border:1px solid var(--border); overflow:hidden; }
+.map svg { width:100%; height:100%; }
+.land { fill:var(--border); }
+.road { fill:none; stroke:var(--surface); stroke-width:8; }
+.route { fill:none; stroke:var(--primary); stroke-width:5; stroke-linecap:round; }
+.map-label { position:absolute; left:12px; bottom:8px; font-size:14px; color:var(--text-muted); }
+.city { position:absolute; font-size:14px; background:var(--surface); padding:2px 4px; border-radius:4px; }
+.start { top:24px; right:8px; } .end { bottom:40px; left:8px; }
+.field { border:1px solid var(--border); border-radius:12px; padding:12px; margin-bottom:12px; }
+.field strong { display:block; }
+.ages { display:flex; gap:8px; margin:8px 0 16px; }
+.chip { border:1px solid var(--primary); background:var(--background); border-radius:16px; padding:8px 16px; }
+button { font:inherit; font-weight:650; text-align:center; border:0; border-radius:12px; background:var(--primary); color:var(--on-primary); padding:14px 12px; width:100%; }
+.action { margin-top:auto; }
+.ring { outline:3px solid var(--accent); outline-offset:4px; border-radius:12px; }
+.timeline { list-style:none; padding:0 0 0 12px; margin:0; border-left:3px solid var(--primary); }
+.timeline li { margin:0 0 14px; padding-left:8px; }
+time { font-weight:750; color:var(--primary); }
+.timeline span { display:block; }
+.focus { padding:12px; background:var(--background); }
+.arrow { margin:16px 0 24px; color:var(--primary); font-weight:650; min-height:48px; }
+.arrow::before { content:'→ '; font-size:24px; }
+.beat:nth-child(3) .arrow::before { content:'↓ '; }
+footer { margin-top:32px; padding-top:24px; border-top:1px solid var(--border); max-width:680px; }
+footer p { margin-bottom:8px; }
+@media(max-width:1000px) { .story { grid-template-columns:repeat(2,minmax(0,1fr)); } .arrow::before { content:'↓ '; } }
+@media(max-width:640px) { main { padding:24px 12px; } .story { grid-template-columns:1fr; gap:0; max-width:380px; margin:auto; } .caption { min-height:0; } .phone { min-height:520px; } .arrow::before { content:'↓ '; } h1 { font-size:36px; } }
+@media print { main { padding:12px; } .language { break-before:page; } .beat { break-inside:avoid; } }
+</style>
+</head>
+<body>
+<main>
+<nav aria-label="Language / Språk"><a href="#english" lang="en">English</a><a href="#swedish" lang="sv">Svenska</a></nav>
+<section class="language" lang="en" id="english">
+<header><h1>Day strip</h1><p>I can see when the children get a break and what comes next, all the way to Göteborg.</p></header>
+<div class="story">
+<div class="beat"><article class="step" data-step="1"><h2 class="caption"><span class="number">01</span><span class="caption-text">We open the map and choose where to go.</span></h2><div class="phone"><div class="brand">Roadpal</div><div class="map"><svg viewBox="0 0 280 220" aria-hidden="true"><path class="land" d="M170 0 L240 0 L220 65 L238 100 L180 150 L130 210 L90 220 L70 180 L110 130 L130 80 Z" /><path class="road" d="M192 35 L160 80 L175 110 L125 150 L90 180" /><path class="route" d="M192 35 L160 80 L175 110 L125 150 L90 180" /></svg><span class="city start">Stockholm</span><span class="city end">Göteborg</span><span class="map-label">Illustrative map</span></div><p>Our family trip begins in Stockholm.</p><div class="action"><button class="ring" type="button">Where to?</button></div></div></article>
+<p class="arrow">Tap Where to? · next 02</p>
+</div>
+<div class="beat"><article class="step" data-step="2"><h2 class="caption"><span class="number">02</span><span class="caption-text">We enter Göteborg and the children's ages.</span></h2><div class="phone"><div class="brand">Roadpal</div><h3>Where to?</h3><div class="ring"><div class="field"><span class="small">From</span><strong>Stockholm</strong></div><div class="field"><span class="small">To</span><strong>Göteborg</strong></div><p>Children’s ages</p><div class="ages"><span class="chip">0–2</span><span class="chip">3–5</span></div></div><div class="action"><button type="button">Plan the trip</button></div></div></article>
+<p class="arrow">Tap Plan the trip · next 03</p>
+</div>
+<div class="beat"><article class="step" data-step="3"><h2 class="caption"><span class="number">03</span><span class="caption-text">We see the whole day, with four breaks along the way.</span></h2><div class="phone"><div class="brand">Roadpal</div><h3>Stockholm → Göteborg</h3><p class="small">Departure 09:00 · 0–2 + 3–5</p><ol class="timeline ring"><li><time>about 10:18</time><span>Spöklekplatsen</span></li><li><time>about 11:46</time><span>Slomarps stadsdelslekplats</span></li><li><time>about 12:43</time><span>Playground Öxnehaga</span></li><li><time>about 13:29</time><span>Playground Villastaden</span></li><li><time>14:41</time><span>Göteborg</span></li></ol><p class="small">Example times. Breaks add time.</p><div class="action"><button type="button">Spöklekplatsen</button></div></div></article>
+<p class="arrow">Tap Spöklekplatsen · next 04</p>
+</div>
+<div class="beat"><article class="step" data-step="4"><h2 class="caption"><span class="number">04</span><span class="caption-text">We check why the first break suits our children.</span></h2><div class="phone"><div class="brand">Roadpal</div><p>First break · about 10:18</p><h3>Spöklekplatsen</h3><div class="focus ring"><p>Suits ages 0–2 and 3–5: sandpit and swings.</p><p class="small">Example reason for this break.</p></div><p>A stop chosen for both children.</p><div class="action"><button type="button">Start</button></div></div></article>
+<p class="arrow">Tap Start · next 05</p>
+</div>
+<div class="beat"><article class="step" data-step="5"><h2 class="caption"><span class="number">05</span><span class="caption-text">We start and see the next break.</span></h2><div class="phone"><div class="brand">Roadpal</div><div class="map"><svg viewBox="0 0 280 220" aria-hidden="true"><path class="land" d="M170 0 L240 0 L220 65 L238 100 L180 150 L130 210 L90 220 L70 180 L110 130 L130 80 Z" /><path class="road" d="M192 35 L160 80 L175 110 L125 150 L90 180" /><path class="route" d="M192 35 L160 80 L175 110 L125 150 L90 180" /></svg><span class="city start">Stockholm</span><span class="city end">Göteborg</span><span class="map-label">Illustrative map</span></div><div class="focus ring"><span class="small">Next break · about 10:18</span><h3>Spöklekplatsen</h3></div><p class="small">Roadpal guides while open with the screen on.</p><div class="action"><button type="button">We’ve arrived</button></div></div></article>
+<p class="arrow">Tap We’ve arrived · next 06</p>
+</div>
+<div class="beat"><article class="step" data-step="6"><h2 class="caption"><span class="number">06</span><span class="caption-text">We arrive at the first playground.</span></h2><div class="phone"><div class="brand">Roadpal</div><p>About 10:18 · We’ve arrived</p><div class="focus ring"><h3>Spöklekplatsen</h3><p>Suits ages 0–2 and 3–5: sandpit and swings.</p></div><p>Time to stretch our legs together.</p><p class="small">Next: Slomarps stadsdelslekplats · 11:46</p><div class="action"><button type="button">Continue to the next leg</button></div></div></article>
+</div>
+</div>
+<footer><h2>What is new</h2><p>Every break in order, with times.</p><p>The next break stays with us as we drive.</p><p>Each break has a reason that fits the children.</p><h2>What it costs</h2><p>The list takes space from the map.</p><p>Guidance needs the screen to stay on.</p></footer></section>
+<section class="language" lang="sv" id="swedish">
+<header><h1>Dagremsan</h1><p>Jag ser när barnen får paus och vad som kommer härnäst, hela vägen till Göteborg.</p></header>
+<div class="story">
+<div class="beat"><article class="step" data-step="1"><h2 class="caption"><span class="number">01</span><span class="caption-text">Vi öppnar kartan och väljer vart vi ska.</span></h2><div class="phone"><div class="brand">Roadpal</div><div class="map"><svg viewBox="0 0 280 220" aria-hidden="true"><path class="land" d="M170 0 L240 0 L220 65 L238 100 L180 150 L130 210 L90 220 L70 180 L110 130 L130 80 Z" /><path class="road" d="M192 35 L160 80 L175 110 L125 150 L90 180" /><path class="route" d="M192 35 L160 80 L175 110 L125 150 L90 180" /></svg><span class="city start">Stockholm</span><span class="city end">Göteborg</span><span class="map-label">Förenklad karta</span></div><p>Vår familjeresa börjar i Stockholm.</p><div class="action"><button class="ring" type="button">Vart vill ni?</button></div></div></article>
+<p class="arrow">Tryck på Vart vill ni? · nästa 02</p>
+</div>
+<div class="beat"><article class="step" data-step="2"><h2 class="caption"><span class="number">02</span><span class="caption-text">Vi fyller i Göteborg och barnens åldrar.</span></h2><div class="phone"><div class="brand">Roadpal</div><h3>Vart vill ni?</h3><div class="ring"><div class="field"><span class="small">Från</span><strong>Stockholm</strong></div><div class="field"><span class="small">Till</span><strong>Göteborg</strong></div><p>Barnens åldrar</p><div class="ages"><span class="chip">0–2</span><span class="chip">3–5</span></div></div><div class="action"><button type="button">Planera resan</button></div></div></article>
+<p class="arrow">Tryck på Planera resan · nästa 03</p>
+</div>
+<div class="beat"><article class="step" data-step="3"><h2 class="caption"><span class="number">03</span><span class="caption-text">Hela dagen syns, med fyra pauser längs vägen.</span></h2><div class="phone"><div class="brand">Roadpal</div><h3>Stockholm → Göteborg</h3><p class="small">Avresa 09:00 · 0–2 + 3–5</p><ol class="timeline ring"><li><time>ca 10:18</time><span>Spöklekplatsen</span></li><li><time>ca 11:46</time><span>Slomarps stadsdelslekplats</span></li><li><time>ca 12:43</time><span>Playground Öxnehaga</span></li><li><time>ca 13:29</time><span>Playground Villastaden</span></li><li><time>14:41</time><span>Göteborg</span></li></ol><p class="small">Exempeltider. Pauser tillkommer.</p><div class="action"><button type="button">Spöklekplatsen</button></div></div></article>
+<p class="arrow">Tryck på Spöklekplatsen · nästa 04</p>
+</div>
+<div class="beat"><article class="step" data-step="4"><h2 class="caption"><span class="number">04</span><span class="caption-text">Vi kollar varför första pausen passar barnen.</span></h2><div class="phone"><div class="brand">Roadpal</div><p>Första pausen · ca 10:18</p><h3>Spöklekplatsen</h3><div class="focus ring"><p>Passar 0–2 och 3–5: sandlåda och gungor.</p><p class="small">Exempel på varför pausen passar.</p></div><p>Ett stopp valt för båda barnen.</p><div class="action"><button type="button">Starta</button></div></div></article>
+<p class="arrow">Tryck på Starta · nästa 05</p>
+</div>
+<div class="beat"><article class="step" data-step="5"><h2 class="caption"><span class="number">05</span><span class="caption-text">Vi startar och ser nästa paus.</span></h2><div class="phone"><div class="brand">Roadpal</div><div class="map"><svg viewBox="0 0 280 220" aria-hidden="true"><path class="land" d="M170 0 L240 0 L220 65 L238 100 L180 150 L130 210 L90 220 L70 180 L110 130 L130 80 Z" /><path class="road" d="M192 35 L160 80 L175 110 L125 150 L90 180" /><path class="route" d="M192 35 L160 80 L175 110 L125 150 L90 180" /></svg><span class="city start">Stockholm</span><span class="city end">Göteborg</span><span class="map-label">Förenklad karta</span></div><div class="focus ring"><span class="small">Nästa paus · ca 10:18</span><h3>Spöklekplatsen</h3></div><p class="small">Roadpal guidar när appen är öppen och skärmen är på.</p><div class="action"><button type="button">Vi är framme</button></div></div></article>
+<p class="arrow">Tryck på Vi är framme · nästa 06</p>
+</div>
+<div class="beat"><article class="step" data-step="6"><h2 class="caption"><span class="number">06</span><span class="caption-text">Vi är framme vid första lekplatsen.</span></h2><div class="phone"><div class="brand">Roadpal</div><p>Ca 10:18 · Vi är framme</p><div class="focus ring"><h3>Spöklekplatsen</h3><p>Passar 0–2 och 3–5: sandlåda och gungor.</p></div><p>Dags att sträcka på benen tillsammans.</p><p class="small">Nästa: Slomarps stadsdelslekplats · 11:46</p><div class="action"><button type="button">Fortsätt till nästa etapp</button></div></div></article>
+</div>
+</div>
+<footer><h2>Det nya</h2><p>Alla pauser i ordning, med tider.</p><p>Nästa paus följer med under resan.</p><p>Varje paus har ett skäl som passar barnen.</p><h2>Det kostar</h2><p>Listan tar plats från kartan.</p><p>Guidningen kräver att skärmen är på.</p></footer></section>
+</main>
+</body>
+</html>
